@@ -1,0 +1,421 @@
+<div class="page">
+  <!-- ═══ HEADER ════════════════════════════════════════════════════════════ -->
+  <header class="page-header">
+    <button class="close-drawer-btn" (click)="handleCancel()" title="Close">
+      <app-icon name="close" width="20" height="20"></app-icon>
+    </button>
+    <div class="page-title">Add Subscription Plan</div>
+  </header>
+
+  <!-- ═══ BODY ══════════════════════════════════════════════════════════════ -->
+  <div class="page-body">
+    <!-- Top Section: Plan Configuration -->
+    <div class="top-section">
+      <!-- Combined Card with 2 columns -->
+      <div class="card card-body">
+        <div class="plan-config-columns">
+          <!-- Left Column: Portal Toggle & Plan Type -->
+          <div class="config-col-left">
+            <div class="config-header-row">
+              <!-- Portal Toggle -->
+              <div class="portal-section">
+                <div class="portal-title">Show this plan on website or company portal</div>
+                <div class="portal-sub">
+                  Customers can subscribe to this plan directly via the website or company portal.
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="showOnPortal" (change)="refreshJson()" />
+                <div class="toggle-track"></div>
+                <div class="toggle-knob"></div>
+              </label>
+            </div>
+
+            <!-- Plan Type -->
+            <div style="margin-top: 20px">
+              <div class="section-label" style="margin-bottom: 12px">Plan Type</div>
+              <div class="plan-type-grid">
+                <div class="plan-type-card" [class.selected]="planType === 'self'" (click)="selectPlanType('self')">
+                  <div class="pt-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                  </div>
+                  <div class="pt-body">
+                    <div class="pt-name">Self-Subscription</div>
+                    <div class="pt-desc">
+                      Customers can subscribe to this plan directly via the website or company portal.
+                    </div>
+                  </div>
+                  <div class="radio-dot"></div>
+                </div>
+                <div class="plan-type-card" [class.selected]="planType === 'sales'" (click)="selectPlanType('sales')">
+                  <div class="pt-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+                      <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                    </svg>
+                  </div>
+                  <div class="pt-body">
+                    <div class="pt-name">Sales-Assisted Subscription</div>
+                    <div class="pt-desc">Customers need to contact sales team to access or subscribe to this plan.</div>
+                  </div>
+                  <div class="radio-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Plan Details -->
+          <div class="config-col-right">
+            <div class="fields-grid">
+              <div class="field">
+                <label class="field-label">Name <span class="req">*</span></label>
+                <input
+                  class="field-input"
+                  [(ngModel)]="planName"
+                  placeholder="Enter plan name"
+                  (ngModelChange)="refreshJson()"
+                />
+              </div>
+              <div class="field">
+                <label class="field-label">Description <span class="req">*</span></label>
+                <textarea
+                  class="field-textarea"
+                  [(ngModel)]="planDesc"
+                  placeholder="Enter plan description"
+                  (ngModelChange)="refreshJson()"
+                  rows="3"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Service Selection (Left) and Configured Charges (Right) -->
+    <div class="split-section">
+      <!-- Left Pane: Service Selection -->
+      <div class="left-pane">
+        <!-- Applications -->
+        <div class="card card-body">
+          <div class="sub-header">
+            <div class="section-label">Applications</div>
+            <span class="count-pill count-blue">{{ selectedAppIds.size }} selected</span>
+          </div>
+          <div class="app-grid">
+            <div
+              *ngFor="let svc of appServices"
+              class="app-card"
+              [class.selected]="isAppSelected(svc.id)"
+              (click)="toggleApp(svc.id)"
+            >
+              <img
+                *ngIf="getAppLogo(svc.appId)"
+                [src]="getAppLogo(svc.appId)"
+                [alt]="getAppName(svc.appId)"
+                class="ac-logo"
+              />
+              <div class="ac-info">
+                <div class="ac-name">{{ getAppName(svc.appId) }}</div>
+                <div class="ac-sub">{{ svc.name }}</div>
+              </div>
+              <div class="chk">
+                <svg class="chk-icon" width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2 6l3 3 5-5"
+                    stroke="#fff"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add-ons & Bundles -->
+        <div class="card card-body">
+          <div class="sub-header">
+            <div class="section-label">Add-ons &amp; Bundles</div>
+            <span class="count-pill count-purple">{{ selectedAddonIds.size }} selected</span>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="addon-search-wrap">
+            <app-icon name="search" class="addon-search-icon"></app-icon>
+            <input
+              type="text"
+              class="addon-search-input"
+              placeholder="Search add-ons..."
+              [(ngModel)]="addonSearchText"
+            />
+            <button *ngIf="addonSearchText" class="addon-search-clear" (click)="addonSearchText = ''">✕</button>
+          </div>
+
+          <!-- Grouped Add-ons -->
+          <div class="addon-groups">
+            <div *ngFor="let groupKey of getGroupKeys()" class="addon-group">
+              <div class="addon-group-header" (click)="toggleAddonGroup(groupKey)">
+                <div class="addon-group-header-left">
+                  <span class="addon-group-name">{{ getAddonGroupName(groupKey) }}</span>
+                  <span class="addon-group-count">{{ getGroupedAddons()[groupKey].length }}</span>
+                </div>
+                <app-icon 
+                  name="chevron-down" 
+                  class="addon-group-chevron"
+                  [class.expanded]="isAddonGroupExpanded(groupKey)"></app-icon>
+              </div>
+
+              <div class="addon-group-content" [class.collapsed]="!isAddonGroupExpanded(groupKey)">
+                <div
+                  *ngFor="let svc of getGroupedAddons()[groupKey]"
+                  class="addon-row"
+                  [class.selected]="isAddonSelected(svc.id)"
+                  (click)="toggleAddon(svc.id)"
+                >
+                  <div class="ar-left">
+                    <div>
+                      <div class="ar-name">{{ svc.name }}</div>
+                      <div class="ar-meta">
+                        <span
+                          class="tag"
+                          [class.tag-addon]="svc.category === 'AddOn'"
+                          [class.tag-bundle]="svc.category === 'Bundle'"
+                          >{{ svc.category }}</span
+                        >
+                      </div>
+                      <div *ngIf="svc.category === 'Bundle'" class="bundle-kids">
+                        <span *ngFor="let kid of getBundleChildren(svc.id)" class="kid-chip">{{ kid.name }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <label class="toggle" (click)="$event.stopPropagation()">
+                    <input type="checkbox" [checked]="isAddonSelected(svc.id)" (change)="toggleAddon(svc.id)" />
+                    <div class="toggle-track"></div>
+                    <div class="toggle-knob"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configured Charges -->
+      <!-- Right Pane: Configured Charges with Scroll -->
+      <div class="right-pane">
+        <div class="right-pane-inner">
+          <!-- Plan Pricing Tiers -->
+          <div *ngIf="totalSelectedItems() > 0" style="margin-bottom: 24px">
+            <div class="section-label" style="margin-bottom: 14px">Plan Pricing Tiers</div>
+            <div class="pricing-tiers">
+              <div *ngFor="let tier of pricingTiers" class="tier-card" [ngClass]="tier.cls">
+                <div class="tier-top">
+                  <div class="tier-name">{{ tier.label }}</div>
+                  <span class="discount-badge" [ngClass]="getDiscountClass(tier.id)">{{
+                    getDiscountLabel(tier.id)
+                  }}</span>
+                </div>
+
+                <!-- Discount Configuration -->
+                <div class="tier-discount-config">
+                  <div class="tier-disc-label">Discount Type:</div>
+                  <div class="tier-disc-toggle">
+                    <button
+                      class="disc-type-btn"
+                      [class.active]="tierDiscountTypes[tier.id] === 'percentage'"
+                      (click)="updateTierDiscountType(tier.id, 'percentage')"
+                    >
+                      %
+                    </button>
+                    <button
+                      class="disc-type-btn"
+                      [class.active]="tierDiscountTypes[tier.id] === 'amount'"
+                      (click)="updateTierDiscountType(tier.id, 'amount')"
+                    >
+                      $
+                    </button>
+                  </div>
+                  <div class="tier-disc-input-wrap">
+                    <span class="tier-disc-pre" *ngIf="tierDiscountTypes[tier.id] === 'amount'">$</span>
+                    <input
+                      type="number"
+                      class="tier-disc-inp"
+                      [value]="tierDiscountValues[tier.id]"
+                      (change)="updateTierDiscountValue(tier.id, $any($event.target).value)"
+                      min="0"
+                      step="0.01"
+                    />
+                    <span class="tier-disc-suf" *ngIf="tierDiscountTypes[tier.id] === 'percentage'">%</span>
+                  </div>
+                </div>
+
+                <div class="tier-price-row">
+                  <span class="tier-price">{{ getEffectivePlanTierPrice(tier) | currency }}</span>
+                  <span class="tier-price-unit">/mo</span>
+                </div>
+                <div class="tier-yearly-row">
+                  Yearly Cost
+                  <span class="tier-yearly-val">{{ tierYearly(getEffectivePlanTierPrice(tier)) | currency }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-bottom: 14px">Configured Services &amp; Charges</div>
+          <div class="charges-area">
+            <div *ngIf="totalSelectedItems() === 0" class="empty-card">
+              <div class="empty-title">No services configured yet</div>
+              <div class="empty-sub">Select applications and add-ons above to configure charges.</div>
+            </div>
+
+            <ng-container *ngFor="let state of getAllSelectedStates()">
+              <div class="svc-card">
+                <div class="svc-card-hdr">
+                  <div class="svc-hdr-info">
+                    <div class="svc-hdr-name">{{ state.serviceName }}</div>
+                    <div class="svc-hdr-badges">
+                      <span
+                        class="badge"
+                        [class.badge-blue]="!isAddonState(state)"
+                        [class.badge-purple]="isAddonState(state) && state.category === 'AddOn'"
+                        [class.badge-amber]="state.category === 'Bundle'"
+                      >
+                        {{ isAddonState(state) ? getCategoryLabel(state.category) : 'App Access' }}
+                      </span>
+                      <span class="badge badge-gray">{{ state.charges.length }} charges</span>
+                    </div>
+                  </div>
+                  <button class="rm-btn" (click)="removeService(state.serviceId, isAddonState(state))">✕</button>
+                </div>
+
+                <div class="tbl-wrap">
+                  <div class="tbl-head">
+                    <div>Charge Name</div>
+                    <div>Type</div>
+                    <div>Frequency</div>
+                    <div>Default</div>
+                    <div>Override Value</div>
+                    <div *ngIf="!isAddonState(state)">Incl. Seats</div>
+                    <div></div>
+                  </div>
+                  <div *ngFor="let charge of state.charges" class="tbl-row" [class.ov]="isOverridden(charge)">
+                    <div class="t-name">
+                      <span>{{ charge.chargeName }}</span>
+                      <span *ngIf="isOverridden(charge)" class="mod-tag">Modified</span>
+                    </div>
+                    <div>
+                      <span
+                        class="type-pill"
+                        [style.color]="getTypeColor(charge.type)"
+                        [style.background]="getTypeColor(charge.type) + '18'"
+                        >{{ charge.type }}</span
+                      >
+                    </div>
+                    <div>
+                      <span class="freq-txt">{{ formatFrequency(charge.frequency) }}</span>
+                    </div>
+                    <div>
+                      <span class="def-val">{{ formatValue(charge.originalValue, charge.dataType) }}</span>
+                    </div>
+                    <div>
+                      <div class="inp-wrap" [class.hv]="charge.overriddenValue !== null">
+                        <span class="inp-pre" *ngIf="charge.dataType === 'money'">$</span>
+                        <span class="inp-pre" *ngIf="charge.dataType === 'percentage'">%</span>
+                        <input
+                          type="number"
+                          class="c-inp"
+                          [placeholder]="charge.originalValue"
+                          [value]="charge.overriddenValue !== null ? charge.overriddenValue : ''"
+                          (change)="updateChargeValue(state.serviceId, charge.chargeId, $any($event.target).value)"
+                          step="0.01"
+                        />
+                      </div>
+                    </div>
+                    <div *ngIf="!isAddonState(state)">
+                      <input
+                        *ngIf="charge.type === 'Flat'"
+                        type="number"
+                        class="c-seats"
+                        placeholder="0"
+                        [value]="charge.includedSeats !== null ? charge.includedSeats : ''"
+                        (change)="updateIncludedSeats(state.serviceId, charge.chargeId, $any($event.target).value)"
+                        min="0"
+                      />
+                      <span *ngIf="charge.type !== 'Flat'" class="na">—</span>
+                    </div>
+                    <div>
+                      <button
+                        *ngIf="isOverridden(charge)"
+                        class="rst-btn"
+                        (click)="resetCharge(state.serviceId, charge.chargeId)"
+                      >
+                        ↺
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="svc-total">
+                  <span class="svc-total-lbl">Cycle Total</span>
+                  <span class="svc-total-val">{{ getCycleTotal(state) | currency }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <!-- /right-pane-inner -->
+      </div>
+      <!-- /right-pane -->
+    </div>
+    <!-- /split-section -->
+  </div>
+  <!-- /page-body -->
+
+  <!-- Footer -->
+  <div class="form-footer">
+    <button class="btn btn-cancel" (click)="handleCancel()">Cancel</button>
+    <button class="btn btn-primary" [disabled]="planName.trim().length === 0" (click)="savePlan()">Save Plan</button>
+  </div>
+
+  <!-- JSON Drawer -->
+  <div class="json-panel" [class.open]="showJsonPanel">
+    <div class="jp-hdr">
+      <span>{{ '{' }} {{ '}' }} JSON Output</span><button class="jp-close" (click)="showJsonPanel = false">✕</button>
+    </div>
+    <pre class="jp-body">{{ jsonOutput }}</pre>
+    <div class="jp-ftr"><button class="btn-export" (click)="savePlan()">💾 Save Plan</button></div>
+  </div>
+  <div class="overlay" [class.visible]="showJsonPanel" (click)="showJsonPanel = false"></div>
+
+  <!-- Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showConfirmDialog"
+    title="Discard Changes?"
+    message="You have unsaved changes. Are you sure you want to discard them?"
+    confirmText="Discard"
+    cancelText="Cancel"
+    confirmButtonClass="btn-danger"
+    (confirmed)="onConfirmDiscard()"
+    (cancelled)="onCancelDiscard()">
+  </app-confirmation-dialog>
+</div>

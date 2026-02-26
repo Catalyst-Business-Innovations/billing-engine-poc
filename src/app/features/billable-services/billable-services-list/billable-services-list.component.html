@@ -1,0 +1,251 @@
+<div class="services-page">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Billable Services & Charges</h1>
+      <p class="page-subtitle">Manage your billable services, add-ons, and pricing charges</p>
+    </div>
+    <div class="add-service-dropdown" [class.open]="dropdownOpen">
+      <button class="btn btn-primary" (click)="toggleDropdown()">
+        <app-icon name="plus"></app-icon>
+        Add Service
+        <app-icon name="chevron-down" class="dropdown-arrow" width="14" height="14"></app-icon>
+      </button>
+      <div class="dropdown-menu" *ngIf="dropdownOpen">
+        <button class="dropdown-item" (click)="onAddService('AddOn')">
+          <div class="dropdown-item-text">
+            <div class="dropdown-item-title">Add Add-On</div>
+            <div class="dropdown-item-desc">Create a new add-on service</div>
+          </div>
+        </button>
+        <button class="dropdown-item" (click)="onAddService('Bundle')">
+          <div class="dropdown-item-text">
+            <div class="dropdown-item-title">Add Bundle</div>
+            <div class="dropdown-item-desc">Create a bundle of services</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filters and Search -->
+  <div class="page-filters">
+    <div class="search-box">
+      <app-icon name="search" class="search-icon" width="18" height="18"></app-icon>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search services..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+      />
+      <button *ngIf="searchText" class="search-clear" (click)="searchText = ''; onSearchChange()">✕</button>
+    </div>
+
+    <div class="category-filters">
+      <button class="filter-btn" [class.active]="filterCategory === 'all'" (click)="setCategoryFilter('all')">
+        All
+        <span class="filter-count">{{ getCategoryCount('all') }}</span>
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filterCategory === 'AppAccess'"
+        (click)="setCategoryFilter('AppAccess')"
+      >
+        App Access
+        <span class="filter-count">{{ getCategoryCount('AppAccess') }}</span>
+      </button>
+      <button class="filter-btn" [class.active]="filterCategory === 'AddOn'" (click)="setCategoryFilter('AddOn')">
+        Add-ons
+        <span class="filter-count">{{ getCategoryCount('AddOn') }}</span>
+      </button>
+      <button class="filter-btn" [class.active]="filterCategory === 'Bundle'" (click)="setCategoryFilter('Bundle')">
+        Bundles
+        <span class="filter-count">{{ getCategoryCount('Bundle') }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Services List -->
+  <div class="services-list">
+    <div *ngIf="filteredServices.length === 0" class="empty-state">
+      <h3 class="empty-title">No services found</h3>
+      <p class="empty-text">
+        {{
+          searchText ? 'Try adjusting your search or filters' : 'Get started by creating your first billable service'
+        }}
+      </p>
+      <button *ngIf="!searchText" class="btn btn-primary" (click)="onAddService('AddOn')">Create First Service</button>
+    </div>
+
+    <div *ngFor="let service of filteredServices" class="service-card" [class.expanded]="isServiceExpanded(service.id)">
+      <div class="service-header" (click)="toggleServiceExpanded(service.id)">
+        <div class="service-header-left">
+          <app-icon 
+            name="chevron-down" 
+            class="expand-icon"
+            [class.expanded]="isServiceExpanded(service.id)"
+            width="20" 
+            height="20"></app-icon>
+
+          <div class="service-info">
+            <div class="service-name-row">
+              <h3 class="service-name">{{ service.name }}</h3>
+              <div class="service-badges">
+                <span
+                  class="badge"
+                  [class.badge-blue]="service.category === 'AppAccess'"
+                  [class.badge-purple]="service.category === 'AddOn'"
+                  [class.badge-amber]="service.category === 'Bundle'"
+                >
+                  {{ getCategoryLabel(service.category) }}
+                </span>
+                <span *ngIf="service.appId" class="badge badge-app">{{ getAppName(service.appId) }}</span>
+                <span *ngIf="service.isSystemDefault" class="badge badge-system">System Default</span>
+              </div>
+            </div>
+            <div class="service-meta">
+              <span class="charges-count">{{ getServiceCharges(service.id).length }} charges configured</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-actions">
+          <button 
+            *ngIf="!(service.category === 'AppAccess' && service.isSystemDefault)"
+            class="action-btn" 
+            (click)="onAddCharge(service.id, $event)" 
+            title="Add Charge">
+            <app-icon name="plus"></app-icon>
+          </button>
+          <button class="action-btn" (click)="onEditService(service.id, $event)" title="Edit Service">
+            <app-icon name="edit"></app-icon>
+          </button>
+          <button
+            *ngIf="!service.isSystemDefault"
+            class="action-btn danger"
+            (click)="deleteService(service, $event)"
+            title="Delete Service"
+          >
+            <app-icon name="delete"></app-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Charges List -->
+      <div class="charges-section" *ngIf="isServiceExpanded(service.id)">
+        <div class="charges-header">
+          <h4 class="charges-title">Pricing Charges</h4>
+        </div>
+
+        <div *ngIf="getServiceCharges(service.id).length === 0" class="no-charges">
+          No charges configured for this service yet.
+        </div>
+
+        <div class="charges-table" *ngIf="getServiceCharges(service.id).length > 0">
+          <div class="charges-table-header">
+            <div>Charge Name</div>
+            <div>Type</div>
+            <div>Frequency</div>
+            <div>Default Value</div>
+            <div>System Default</div>
+            <div></div>
+          </div>
+
+          <div *ngFor="let charge of getServiceCharges(service.id)" class="charge-row">
+            <div class="charge-name">{{ charge.name }}</div>
+            <div>
+              <span
+                class="type-badge"
+                [style.color]="getChargeTypeColor(charge.type)"
+                [style.background]="getChargeTypeColor(charge.type) + '18'"
+              >
+                {{ charge.type }}
+              </span>
+            </div>
+            <div class="charge-frequency">{{ charge.frequency }}</div>
+            <div class="charge-value">
+              <!-- Inline editing for App Access services -->
+              <div *ngIf="service.category === 'AppAccess' && isEditingCharge(charge.id)" class="inline-edit-container">
+                <input
+                  type="number"
+                  [(ngModel)]="editingValue"
+                  class="inline-edit-input"
+                  [step]="charge.valueDataType === 'percentage' ? '0.01' : '0.01'"
+                  (click)="$event.stopPropagation()"
+                  (keyup.enter)="saveChargeValue(charge, $event)"
+                  (keyup.escape)="cancelEditingCharge($event)"
+                />
+                <button class="inline-btn save" (click)="saveChargeValue(charge, $event)" title="Save">✓</button>
+                <button class="inline-btn cancel" (click)="cancelEditingCharge($event)" title="Cancel">✕</button>
+              </div>
+              <span
+                *ngIf="service.category === 'AppAccess' && !isEditingCharge(charge.id)"
+                class="editable-value"
+                (click)="startEditingCharge(charge, $event)"
+                title="Click to edit"
+              >
+                {{ formatValue(charge.defaultValue, charge.valueDataType) }}
+                <app-icon name="edit" class="edit-icon" width="14" height="14"></app-icon>
+              </span>
+              <!-- Regular display for non-AppAccess -->
+              <span *ngIf="service.category !== 'AppAccess'">{{
+                formatValue(charge.defaultValue, charge.valueDataType)
+              }}</span>
+            </div>
+            <div>
+              <span class="system-badge" *ngIf="charge.isSystemDefault">✓</span>
+              <span class="system-badge inactive" *ngIf="!charge.isSystemDefault">—</span>
+            </div>
+            <div class="charge-actions">
+              <!-- Show edit button only for non-AppAccess services -->
+              <button
+                *ngIf="service.category !== 'AppAccess'"
+                class="action-btn-sm"
+                (click)="onEditCharge(service.id, charge.id, $event)"
+                title="Edit"
+              >
+                <app-icon name="edit" width="14" height="14"></app-icon>
+              </button>
+              <!-- Hide delete button for AppAccess services -->
+              <button
+                *ngIf="service.category !== 'AppAccess'"
+                class="action-btn-sm danger"
+                [disabled]="charge.isSystemDefault"
+                [class.disabled]="charge.isSystemDefault"
+                (click)="deleteCharge(service.id, charge, $event)"
+                [title]="charge.isSystemDefault ? 'Cannot delete system default charges' : 'Delete'"
+              >
+                <app-icon name="delete" width="14" height="14"></app-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service Delete Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showDeleteServiceConfirmDialog"
+    title="Delete Service?"
+    [message]="getDeleteServiceMessage()"
+    confirmText="Delete"
+    cancelText="Cancel"
+    confirmButtonClass="btn-danger"
+    (confirmed)="onConfirmDeleteService()"
+    (cancelled)="onCancelDeleteService()">
+  </app-confirmation-dialog>
+
+  <!-- Charge Delete Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showDeleteChargeConfirmDialog"
+    title="Delete Charge?"
+    [message]="getDeleteChargeMessage()"
+    confirmText="Delete"
+    cancelText="Cancel"
+    confirmButtonClass="btn-danger"
+    (confirmed)="onConfirmDeleteCharge()"
+    (cancelled)="onCancelDeleteCharge()">
+  </app-confirmation-dialog>
+</div>

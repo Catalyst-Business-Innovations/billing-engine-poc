@@ -1,0 +1,81 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2 class="form-title">{{ chargeId ? 'Edit' : 'Add' }} Pricing Charge</h2>
+    <button class="close-btn" (click)="onCancel()">
+      <app-icon name="close" width="20" height="20"></app-icon>
+    </button>
+  </div>
+
+  <div class="form-body">
+    <div class="field">
+      <label class="field-label">Charge Name <span class="required">*</span></label>
+      <input
+        type="text"
+        class="field-input"
+        [(ngModel)]="formData.name"
+        placeholder="e.g., Base Price, Per User Fee"
+        autofocus
+      />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Charge Type <span class="required">*</span></label>
+      <div class="type-row">
+        <div
+          *ngFor="let type of chargeTypes"
+          class="type-option"
+          [class.selected]="formData.type === type"
+          (click)="formData.type = type; onTypeChange()"
+        >
+          <div class="type-name">{{ getTypeLabel(type) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Frequency <span class="required">*</span></label>
+        <select class="field-select" [(ngModel)]="formData.frequency">
+          <option value="PerBillingCycle">Per Billing Cycle</option>
+          <option value="OneTime">One Time</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Default Value <span class="required">*</span></label>
+        <div class="value-input-wrap">
+          <span class="value-prefix" *ngIf="formData.valueDataType === 'money'">$</span>
+          <input
+            type="number"
+            class="field-input"
+            [(ngModel)]="formData.defaultValue"
+            min="0"
+            step="0.01"
+            [class.with-prefix]="formData.valueDataType === 'money'"
+            [class.with-suffix]="formData.valueDataType === 'percentage'"
+          />
+          <span class="value-suffix" *ngIf="formData.valueDataType === 'percentage'">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="formData.isSystemDefault" />
+        <span class="checkbox-text">System Default Charge</span>
+      </label>
+      <p class="field-hint">System default charges are automatically included when this service is added to a plan</p>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+    <button
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="!formData.name.trim() || formData.defaultValue < 0"
+    >
+      {{ chargeId ? 'Update' : 'Create' }} Charge
+    </button>
+  </div>
+</div>

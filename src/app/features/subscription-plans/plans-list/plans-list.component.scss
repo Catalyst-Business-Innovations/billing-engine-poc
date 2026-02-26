@@ -1,0 +1,481 @@
+// ─── Variables ────────────────────────────────────────────────────────────────
+$blue: #0070b9;
+$blue-light: #e6f2fa;
+$green: #16a34a;
+$red: #e53935;
+$border: #dde1ea;
+$bg: #f4f6f9;
+$card: #ffffff;
+$text: #1a2332;
+$muted: #6b7a94;
+$label: #374151;
+
+// ─── Page Container ───────────────────────────────────────────────────────────
+.plans-page {
+  min-height: 100%;
+  background: $bg;
+  padding: 24px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $border;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: $text;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: $muted;
+  margin: 0;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: none;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.btn-primary {
+  background: $blue;
+  color: #fff;
+
+  &:hover {
+    background: #005a95;
+    box-shadow: 0 4px 12px rgba(0, 112, 185, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ─── Filters ──────────────────────────────────────────────────────────────────
+.page-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $muted;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 11px 40px 11px 44px;
+  background: #fff;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  font-size: 14px;
+  color: $text;
+  transition: all 0.18s;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $blue;
+    box-shadow: 0 0 0 3px rgba(30, 111, 217, 0.1);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 50%;
+  color: #64748b;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: #cbd5e1;
+    color: $text;
+  }
+}
+
+.status-filters {
+  display: flex;
+  gap: 8px;
+  background: #fff;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1.5px solid $border;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: $muted;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  white-space: nowrap;
+
+  &:hover {
+    background: #f8fafc;
+    color: $text;
+  }
+
+  &.active {
+    background: $blue;
+    color: #fff;
+
+    .filter-count {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+  }
+}
+
+.filter-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  min-width: 22px;
+  text-align: center;
+  color: $muted;
+}
+
+// ─── Plans Grid ───────────────────────────────────────────────────────────────
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1.5px dashed $border;
+}
+
+.empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 8px 0;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: $muted;
+  margin: 0 0 24px 0;
+}
+
+// ─── Plan Card ────────────────────────────────────────────────────────────────
+.plan-card {
+  background: #fff;
+  border: 1.5px solid $border;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+
+  &:hover {
+    border-color: $blue;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.plan-status-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.active {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+
+  &.inactive {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &.draft {
+    background: #fef3c7;
+    color: #d97706;
+  }
+}
+
+.plan-header {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.plan-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plan-description {
+  font-size: 13px;
+  color: $muted;
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.app-logos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.app-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.15s;
+
+  &:hover {
+    transform: scale(1.15);
+    border-color: $blue;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.plan-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.detail-label {
+  color: $muted;
+  font-weight: 500;
+}
+
+.detail-value {
+  color: $text;
+  font-weight: 600;
+}
+
+.subscriber-count {
+  background: #e6f2fa;
+  color: $blue;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+}
+
+.plan-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 16px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.price-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: $text;
+  letter-spacing: -0.02em;
+}
+
+.price-period {
+  font-size: 14px;
+  color: $muted;
+  font-weight: 500;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 8px;
+  background: #f8fafc;
+  border: 1px solid $border;
+  border-radius: 7px;
+  color: $muted;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: $blue;
+    border-color: $blue;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  &.danger:hover {
+    background: $red;
+    border-color: $red;
+    color: #fff;
+  }
+
+  &.disabled,
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+      background: #f8fafc;
+      border-color: $border;
+      color: $muted;
+      transform: none;
+    }
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .plans-page {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .page-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: none;
+  }
+
+  .status-filters {
+    justify-content: stretch;
+  }
+
+  .filter-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+}

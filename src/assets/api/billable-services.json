@@ -1,0 +1,316 @@
+[
+  {
+    "id": 1,
+    "appId": 1,
+    "name": "TPM App Access",
+    "isSystemDefault": true,
+    "category": "AppAccess",
+    "charges": [
+      {
+        "id": 1,
+        "billableServiceId": 1,
+        "name": "Base Subscription",
+        "isSystemDefault": true,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 49,
+        "valueDataType": "money"
+      },
+      {
+        "id": 2,
+        "billableServiceId": 1,
+        "name": "Per Station License",
+        "isSystemDefault": true,
+        "type": "PerSeat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 12,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "appId": 2,
+    "name": "POS App Access",
+    "isSystemDefault": true,
+    "category": "AppAccess",
+    "charges": [
+      {
+        "id": 3,
+        "billableServiceId": 2,
+        "name": "Base Subscription",
+        "isSystemDefault": true,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 79,
+        "valueDataType": "money"
+      },
+      {
+        "id": 4,
+        "billableServiceId": 2,
+        "name": "Per Terminal License",
+        "isSystemDefault": true,
+        "type": "PerSeat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 25,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "appId": 4,
+    "name": "Lister App Access",
+    "isSystemDefault": true,
+    "category": "AppAccess",
+    "charges": [
+      {
+        "id": 5,
+        "billableServiceId": 3,
+        "name": "Base Subscription",
+        "isSystemDefault": true,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 99,
+        "valueDataType": "money"
+      },
+      {
+        "id": 6,
+        "billableServiceId": 3,
+        "name": "Commission on Sales",
+        "isSystemDefault": true,
+        "type": "PercentageOfRevenue",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 2.5,
+        "valueDataType": "percentage"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "appId": null,
+    "name": "Payment Processing",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 7,
+        "billableServiceId": 4,
+        "name": "Monthly Gateway Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 25,
+        "valueDataType": "money"
+      },
+      {
+        "id": 8,
+        "billableServiceId": 4,
+        "name": "Transaction Fee",
+        "isSystemDefault": false,
+        "type": "PerTransaction",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 0.25,
+        "valueDataType": "money"
+      },
+      {
+        "id": 18,
+        "billableServiceId": 4,
+        "name": "Processing Rate",
+        "isSystemDefault": false,
+        "type": "PercentageOfRevenue",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 2.9,
+        "valueDataType": "percentage"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "appId": null,
+    "name": "Premium Support",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 9,
+        "billableServiceId": 5,
+        "name": "Monthly Support Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 199,
+        "valueDataType": "money"
+      },
+      {
+        "id": 10,
+        "billableServiceId": 5,
+        "name": "Onboarding & Setup",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "OneTime",
+        "defaultValue": 499,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "appId": null,
+    "name": "Payment Processing + Premium Support",
+    "isSystemDefault": false,
+    "category": "Bundle",
+    "charges": [
+      {
+        "id": 11,
+        "billableServiceId": 6,
+        "name": "Bundle Subscription",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 199,
+        "valueDataType": "money"
+      }
+    ],
+    "bundleItems": [
+      {
+        "id": 1,
+        "billableServiceChildId": 4,
+        "billableServiceParentId": 6,
+        "childService": {
+          "id": 4,
+          "appId": null,
+          "name": "Payment Processing",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        }
+      },
+      {
+        "id": 2,
+        "billableServiceChildId": 5,
+        "billableServiceParentId": 6,
+        "childService": {
+          "id": 5,
+          "appId": null,
+          "name": "Premium Support",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        }
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "appId": 1,
+    "name": "Advanced Analytics & Insights",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 12,
+        "billableServiceId": 7,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 89,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "appId": 1,
+    "name": "Custom Reporting & Exports",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 13,
+        "billableServiceId": 8,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 59,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "appId": 2,
+    "name": "Inventory Management Pro",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 14,
+        "billableServiceId": 9,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 69,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "appId": 2,
+    "name": "Customer Loyalty Program",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 15,
+        "billableServiceId": 10,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 49,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "appId": 4,
+    "name": "Premium Store Themes",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 16,
+        "billableServiceId": 11,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 39,
+        "valueDataType": "money"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "appId": 4,
+    "name": "SEO & Marketing Tools",
+    "isSystemDefault": false,
+    "category": "AddOn",
+    "charges": [
+      {
+        "id": 17,
+        "billableServiceId": 12,
+        "name": "Monthly Fee",
+        "isSystemDefault": false,
+        "type": "Flat",
+        "frequency": "PerBillingCycle",
+        "defaultValue": 79,
+        "valueDataType": "money"
+      }
+    ]
+  }
+]

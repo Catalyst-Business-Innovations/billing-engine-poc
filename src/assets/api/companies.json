@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "code": "COMP001",
+    "name": "Acme Corporation"
+  },
+  {
+    "id": 2,
+    "code": "COMP002",
+    "name": "TechStart Inc"
+  },
+  {
+    "id": 3,
+    "code": "COMP003",
+    "name": "Global Systems Ltd"
+  },
+  {
+    "id": 4,
+    "code": "COMP004",
+    "name": "SmartBiz Solutions"
+  },
+  {
+    "id": 5,
+    "code": "COMP005",
+    "name": "Enterprise Co"
+  },
+  {
+    "id": 6,
+    "code": "COMP006",
+    "name": "Digital Innovators LLC"
+  },
+  {
+    "id": 7,
+    "code": "COMP007",
+    "name": "Cloud Nine Technologies"
+  },
+  {
+    "id": 8,
+    "code": "COMP008",
+    "name": "Quantum Computing Inc"
+  },
+  {
+    "id": 9,
+    "code": "COMP009",
+    "name": "NextGen Solutions"
+  },
+  {
+    "id": 10,
+    "code": "COMP010",
+    "name": "Stellar Systems Group"
+  },
+  {
+    "id": 11,
+    "code": "COMP011",
+    "name": "Phoenix Enterprises"
+  },
+  {
+    "id": 12,
+    "code": "COMP012",
+    "name": "Velocity Software"
+  },
+  {
+    "id": 13,
+    "code": "COMP013",
+    "name": "Alpha Technologies"
+  },
+  {
+    "id": 14,
+    "code": "COMP014",
+    "name": "Beta Innovations"
+  },
+  {
+    "id": 15,
+    "code": "COMP015",
+    "name": "Gamma Industries"
+  },
+  {
+    "id": 16,
+    "code": "COMP016",
+    "name": "Delta Solutions Inc"
+  },
+  {
+    "id": 17,
+    "code": "COMP017",
+    "name": "Epsilon Systems"
+  },
+  {
+    "id": 18,
+    "code": "COMP018",
+    "name": "Zeta Corporation"
+  },
+  {
+    "id": 19,
+    "code": "COMP019",
+    "name": "Theta Dynamics"
+  },
+  {
+    "id": 20,
+    "code": "COMP020",
+    "name": "Omega Global Services"
+  },
+  {
+    "id": 21,
+    "code": "COMP021",
+    "name": "Prime Tech Partners"
+  },
+  {
+    "id": 22,
+    "code": "COMP022",
+    "name": "Summit Software Solutions"
+  },
+  {
+    "id": 23,
+    "code": "COMP023",
+    "name": "Horizon Business Systems"
+  },
+  {
+    "id": 24,
+    "code": "COMP024",
+    "name": "Catalyst Enterprises"
+  },
+  {
+    "id": 25,
+    "code": "COMP025",
+    "name": "Infinity Tech Group"
+  }
+]

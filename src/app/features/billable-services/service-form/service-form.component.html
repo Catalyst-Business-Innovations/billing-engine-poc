@@ -1,0 +1,255 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2 class="form-title">
+      {{ serviceId ? 'Edit' : 'Add' }}
+      {{ formData.category === 'Bundle' ? 'Bundle' : formData.category === 'AddOn' ? 'Add-On' : 'Billable Service' }}
+    </h2>
+    <button class="close-btn" (click)="onCancel()">
+      <app-icon name="close" width="20" height="20"></app-icon>
+    </button>
+  </div>
+
+  <div class="form-body">
+    <div class="field">
+      <label class="field-label">Service Name <span class="required">*</span></label>
+      <input
+        type="text"
+        class="field-input"
+        [(ngModel)]="formData.name"
+        placeholder="e.g., Priority Support, Analytics Dashboard"
+        autofocus
+      />
+    </div>
+
+    <!-- Category Selection (New Service) -->
+    <div class="field" *ngIf="!serviceId && !isCategoryPreSelected()">
+      <label class="field-label">Category <span class="required">*</span></label>
+      <div class="category-grid">
+        <div
+          *ngFor="let cat of categories"
+          class="category-option"
+          [class.selected]="formData.category === cat"
+          (click)="formData.category = cat"
+        >
+          <div class="category-name">{{ getCategoryLabel(cat) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Display (Edit Mode or Pre-selected) -->
+    <div class="field" *ngIf="serviceId || isCategoryPreSelected()">
+      <label class="field-label">Category</label>
+      <div class="category-display">
+        <span class="category-badge">
+          {{ getCategoryLabel(formData.category) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">App (Optional)</label>
+      <select
+        class="field-select"
+        [(ngModel)]="formData.appId"
+        (ngModelChange)="formData.category === 'Bundle' ? onAppChange() : null"
+      >
+        <option [ngValue]="null">Global (All Apps)</option>
+        <option *ngFor="let app of apps" [ngValue]="app.id">{{ app.name }}</option>
+      </select>
+      <p class="field-hint">
+        <span *ngIf="formData.category === 'Bundle' && formData.appId">
+          App-specific bundles can only include add-ons from {{ formData.appId }} or global add-ons
+        </span>
+        <span *ngIf="formData.category === 'Bundle' && !formData.appId">
+          Global bundles can only include global add-ons (not app-specific)
+        </span>
+        <span *ngIf="formData.category !== 'Bundle'">
+          Select an app to make this service app-specific, or leave as Global
+        </span>
+      </p>
+    </div>
+
+    <!-- Bundle Add-On Selection -->
+    <div class="field" *ngIf="formData.category === 'Bundle'">
+      <label class="field-label">Select Add-Ons for Bundle <span class="required">*</span></label>
+      <div class="addon-selection">
+        <div *ngIf="availableAddOns.length === 0" class="no-addons">
+          <span *ngIf="formData.appId">
+            No add-ons available for {{ formData.appId }}.<br />
+            Create {{ formData.appId }}-specific or global add-ons first.
+          </span>
+          <span *ngIf="!formData.appId">
+            No global add-ons available.<br />
+            Create global add-ons (not app-specific) first, or assign this bundle to an app.
+          </span>
+        </div>
+        <div class="addon-list" *ngIf="availableAddOns.length > 0">
+          <div
+            *ngFor="let addon of availableAddOns"
+            class="addon-item"
+            [class.selected]="isAddOnSelected(addon.id)"
+            (click)="toggleAddOn(addon.id)"
+          >
+            <div class="addon-checkbox">
+              <app-icon 
+                *ngIf="isAddOnSelected(addon.id)" 
+                name="checkmark" 
+                width="14" 
+                height="14"
+                strokeWidth="3"></app-icon>
+            </div>
+            <div class="addon-info">
+              <div class="addon-name">{{ addon.name }}</div>
+              <div class="addon-meta">
+                <span class="addon-app-badge" *ngIf="addon.appId">{{ addon.appId }}</span>
+                <span class="addon-app-badge" *ngIf="!addon.appId" style="background: #f3f4f6; color: #6b7280"
+                  >Global</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="field-hint">Select at least 2 add-ons to create a bundle</p>
+    </div>
+
+    <!-- Pricing Charges -->
+    <div class="field charges-section">
+      <div class="section-header">
+        <label class="field-label">Pricing Charges</label>
+        <button type="button" class="btn-add-charge" (click)="openChargeForm()">
+          <span class="icon">+</span> Add Charge
+        </button>
+      </div>
+
+      <!-- Existing Charges -->
+      <div class="charges-list" *ngIf="charges.length > 0">
+        <div class="charge-card" *ngFor="let charge of charges; let i = index">
+          <div class="charge-info">
+            <div class="charge-details">
+              <div class="charge-name">{{ charge.name }}</div>
+              <div class="charge-meta">
+                <span class="charge-type">{{ getChargeTypeLabel(charge.type) }}</span>
+                <span class="separator">•</span>
+                <span class="charge-frequency">{{
+                  charge.frequency === 'PerBillingCycle' ? 'Per Billing Cycle' : 'One-Time'
+                }}</span>
+                <span class="separator">•</span>
+                <span class="charge-value">{{ formatChargeValue(charge.defaultValue, charge.valueDataType) }}</span>
+              </div>
+            </div>
+            <div class="charge-actions">
+              <button type="button" class="btn-icon" (click)="editCharge(i)" title="Edit">
+                <span>✏️</span>
+              </button>
+              <button type="button" class="btn-icon" (click)="removeCharge(i)" title="Remove">
+                <span>🗑️</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inline Charge Form -->
+      <div class="charge-form-inline" *ngIf="showChargeForm">
+        <div class="form-inline-header">
+          <h4>{{ editingChargeIndex !== null ? 'Edit Charge' : 'New Charge' }}</h4>
+        </div>
+
+        <div class="form-group-inline">
+          <label>Charge Name *</label>
+          <input
+            type="text"
+            [(ngModel)]="chargeFormData.name"
+            name="chargeName"
+            placeholder="e.g., Storage Fee, User License"
+            class="form-input"
+          />
+        </div>
+
+        <div class="form-row-inline">
+          <div class="form-group-inline">
+            <label>Charge Type *</label>
+            <select
+              [(ngModel)]="chargeFormData.type"
+              (ngModelChange)="onChargeTypeChange()"
+              name="chargeType"
+              class="form-input"
+            >
+              <option *ngFor="let type of chargeTypes" [value]="type.value">{{ type.label }}</option>
+            </select>
+          </div>
+
+          <div class="form-group-inline">
+            <label>Frequency *</label>
+            <select [(ngModel)]="chargeFormData.frequency" name="chargeFrequency" class="form-input">
+              <option *ngFor="let freq of chargeFrequencies" [value]="freq.value">
+                {{ freq.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-inline">
+          <label>Default Value *</label>
+          <div class="input-with-affix">
+            <span class="input-prefix" *ngIf="chargeFormData.valueDataType === 'money'">$</span>
+            <input
+              type="number"
+              [(ngModel)]="chargeFormData.defaultValue"
+              name="chargeValue"
+              min="0"
+              step="0.01"
+              class="form-input"
+              [class.with-prefix]="chargeFormData.valueDataType === 'money'"
+              [class.with-suffix]="chargeFormData.valueDataType === 'percentage'"
+            />
+            <span class="input-suffix" *ngIf="chargeFormData.valueDataType === 'percentage'">%</span>
+          </div>
+        </div>
+
+        <div class="form-inline-actions">
+          <button type="button" class="btn btn-cancel" (click)="cancelChargeForm()">Cancel</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="addCharge()"
+            [disabled]="!chargeFormData.name.trim() || chargeFormData.defaultValue <= 0"
+          >
+            {{ editingChargeIndex !== null ? 'Update' : 'Add' }} Charge
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="charges.length === 0 && !showChargeForm">
+        <p class="empty-text">No pricing charges added yet</p>
+        <p class="empty-hint">Add at least one charge to define pricing</p>
+      </div>
+    </div>
+
+    <div class="field" *ngIf="formData.category === 'AppAccess'">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="formData.isSystemDefault" />
+        <span class="checkbox-text">System Default Service</span>
+      </label>
+      <p class="field-hint">System default services are included in all new plans automatically</p>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+    <button
+      class="btn btn-primary"
+      (click)="onSubmit()"
+      [disabled]="
+        !formData.name.trim() ||
+        charges.length === 0 ||
+        (formData.category === 'Bundle' && formData.bundleAddOnIds.length < 2)
+      "
+    >
+      {{ serviceId ? 'Update' : 'Create' }}
+      {{ formData.category === 'Bundle' ? 'Bundle' : formData.category === 'AddOn' ? 'Add-On' : 'Service' }}
+    </button>
+  </div>
+</div>

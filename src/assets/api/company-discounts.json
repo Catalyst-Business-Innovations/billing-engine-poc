@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "companyId": 1,
+    "company": {
+      "id": 1,
+      "code": "COMP001",
+      "name": "Acme Corporation"
+    },
+    "discountType": "Percentage",
+    "discountValue": 20,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-12-31",
+    "reason": "Enterprise annual contract - 20% volume discount",
+    "notes": "Approved by VP of Sales. Multi-year customer with 50+ licenses.",
+    "isActive": true,
+    "createdBy": "John Smith",
+    "createdAt": "2025-12-15T10:00:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 2,
+    "companyId": 2,
+    "company": {
+      "id": 2,
+      "code": "COMP002",
+      "name": "TechStart Inc"
+    },
+    "discountType": "Percentage",
+    "discountValue": 25,
+    "effectiveStartDate": "2026-02-01",
+    "effectiveEndDate": "2027-01-31",
+    "reason": "Early adopter discount - startup program",
+    "notes": "Part of our startup accelerator program. 12-month commitment.",
+    "isActive": true,
+    "createdBy": "Sarah Johnson",
+    "createdAt": "2026-01-28T14:30:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 3,
+    "companyId": 3,
+    "company": {
+      "id": 3,
+      "code": "COMP003",
+      "name": "Global Retail Solutions"
+    },
+    "discountType": "FlatAmount",
+    "discountValue": 750,
+    "effectiveStartDate": "2026-01-15",
+    "effectiveEndDate": "2026-06-30",
+    "reason": "Q1-Q2 promotional discount",
+    "notes": "Limited time offer for new POS enterprise customers.",
+    "isActive": true,
+    "createdBy": "Michael Chen",
+    "createdAt": "2026-01-12T09:15:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 4,
+    "companyId": 4,
+    "company": {
+      "id": 4,
+      "code": "COMP004",
+      "name": "GreenEarth Foundation"
+    },
+    "discountType": "Percentage",
+    "discountValue": 30,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": null,
+    "reason": "Non-profit organization discount",
+    "notes": "Permanent discount for registered 501(c)(3) organizations.",
+    "isActive": true,
+    "createdBy": "Emily Watson",
+    "createdAt": "2026-01-05T11:20:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 5,
+    "companyId": 5,
+    "company": {
+      "id": 5,
+      "code": "COMP005",
+      "name": "MediCare Plus"
+    },
+    "discountType": "Percentage",
+    "discountValue": 15,
+    "effectiveStartDate": "2026-03-01",
+    "effectiveEndDate": "2027-02-28",
+    "reason": "Healthcare industry special - HIPAA compliance bundle",
+    "notes": "Includes premium support. Annual contract with auto-renewal.",
+    "isActive": true,
+    "createdBy": "David Rodriguez",
+    "createdAt": "2026-02-25T16:45:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 6,
+    "companyId": 1,
+    "company": {
+      "id": 1,
+      "code": "COMP001",
+      "name": "Acme Corporation"
+    },
+    "discountType": "FlatAmount",
+    "discountValue": 1200,
+    "effectiveStartDate": "2025-06-01",
+    "effectiveEndDate": "2026-05-31",
+    "reason": "Referral bonus - brought in 3 new enterprise clients",
+    "notes": "One-time annual credit applied. Referred TechVision, DataFlow, and CloudFirst.",
+    "isActive": false,
+    "createdBy": "John Smith",
+    "createdAt": "2025-05-28T13:00:00Z",
+    "modifiedBy": "Sarah Johnson",
+    "modifiedAt": "2026-01-15T10:30:00Z"
+  },
+  {
+    "id": 7,
+    "companyId": 6,
+    "company": {
+      "id": 6,
+      "code": "COMP006",
+      "name": "EduTech Academy"
+    },
+    "discountType": "Percentage",
+    "discountValue": 40,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": null,
+    "reason": "Educational institution discount",
+    "notes": "Permanent discount for K-12 schools and universities. Requires annual verification of educational status.",
+    "isActive": true,
+    "createdBy": "Lisa Martinez",
+    "createdAt": "2026-01-03T08:30:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 8,
+    "companyId": 7,
+    "company": {
+      "id": 7,
+      "code": "COMP007",
+      "name": "FastGrow Ventures"
+    },
+    "discountType": "Percentage",
+    "discountValue": 10,
+    "effectiveStartDate": "2026-02-15",
+    "effectiveEndDate": "2026-08-14",
+    "reason": "Trial conversion discount - 6 months",
+    "notes": "Converted from 30-day trial. Discount expires after initial 6-month period.",
+    "isActive": true,
+    "createdBy": "Tom Williams",
+    "createdAt": "2026-02-14T15:20:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 9,
+    "companyId": 8,
+    "company": {
+      "id": 8,
+      "code": "COMP008",
+      "name": "RetailChain Express"
+    },
+    "discountType": "FlatAmount",
+    "discountValue": 500,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-03-31",
+    "reason": "Competitive migration incentive",
+    "notes": "Switching from competitor platform. One-time credit to offset migration costs.",
+    "isActive": true,
+    "createdBy": "Michael Chen",
+    "createdAt": "2025-12-20T10:00:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 10,
+    "companyId": 9,
+    "company": {
+      "id": 9,
+      "code": "COMP009",
+      "name": "CloudNine Consulting"
+    },
+    "discountType": "Percentage",
+    "discountValue": 12,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-12-31",
+    "reason": "Partner reseller discount",
+    "notes": "Authorized reseller agreement. Applies to all subscription plans sold to end clients.",
+    "isActive": true,
+    "createdBy": "Sarah Johnson",
+    "createdAt": "2025-11-30T14:00:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 11,
+    "companyId": 10,
+    "company": {
+      "id": 10,
+      "code": "COMP010",
+      "name": "InnovateLabs"
+    },
+    "discountType": "Percentage",
+    "discountValue": 18,
+    "effectiveStartDate": "2026-02-01",
+    "effectiveEndDate": "2028-01-31",
+    "reason": "Multi-year prepaid contract - 2 years",
+    "notes": "24-month prepayment discount. Locked-in pricing for contract duration.",
+    "isActive": true,
+    "createdBy": "David Rodriguez",
+    "createdAt": "2026-01-28T11:45:00Z",
+    "modifiedBy": null,
+    "modifiedAt": null
+  },
+  {
+    "id": 12,
+    "companyId": 2,
+    "company": {
+      "id": 2,
+      "code": "COMP002",
+      "name": "TechStart Inc"
+    },
+    "discountType": "FlatAmount",
+    "discountValue": 300,
+    "effectiveStartDate": "2025-09-01",
+    "effectiveEndDate": "2025-12-31",
+    "reason": "Q4 loyalty bonus",
+    "notes": "Quarterly credit for consistent on-time payments and positive case studies.",
+    "isActive": false,
+    "createdBy": "Sarah Johnson",
+    "createdAt": "2025-08-28T09:00:00Z",
+    "modifiedBy": "Sarah Johnson",
+    "modifiedAt": "2026-01-02T10:00:00Z"
+  }
+]

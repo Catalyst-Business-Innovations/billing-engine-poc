@@ -1,0 +1,881 @@
+[
+  {
+    "id": 1,
+    "name": "TPM Starter",
+    "description": "Perfect for small thrift stores getting started with production management",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 23,
+    "items": [
+      {
+        "id": 1,
+        "subscriptionPlanId": 1,
+        "billableServiceId": 1,
+        "service": {
+          "id": 1,
+          "appId": 1,
+          "name": "TPM App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 1,
+            "subscriptionPlanItemId": 1,
+            "billableServiceChargeId": 1,
+            "charge": {
+              "id": 1,
+              "billableServiceId": 1,
+              "name": "Base Subscription",
+              "isSystemDefault": true,
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 49,
+              "valueDataType": "money"
+            },
+            "originalValue": 49,
+            "overriddenValue": 49,
+            "includedSeats": 3
+          },
+          {
+            "id": 2,
+            "subscriptionPlanItemId": 1,
+            "billableServiceChargeId": 2,
+            "charge": {
+              "id": 2,
+              "billableServiceId": 1,
+              "name": "Per User License",
+              "isSystemDefault": true,
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 12,
+              "valueDataType": "money"
+            },
+            "originalValue": 12,
+            "overriddenValue": 12,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "TPM Professional",
+    "description": "Advanced thrift store production management with analytics and custom reporting",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 47,
+    "items": [
+      {
+        "id": 3,
+        "subscriptionPlanId": 2,
+        "billableServiceId": 1,
+        "service": {
+          "id": 1,
+          "appId": 1,
+          "name": "TPM App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 3,
+            "subscriptionPlanItemId": 3,
+            "billableServiceChargeId": 1,
+            "charge": {
+              "id": 1,
+              "billableServiceId": 1,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 49,
+              "valueDataType": "money"
+            },
+            "originalValue": 49,
+            "overriddenValue": 49,
+            "includedSeats": 10
+          },
+          {
+            "id": 4,
+            "subscriptionPlanItemId": 3,
+            "billableServiceChargeId": 2,
+            "charge": {
+              "id": 2,
+              "billableServiceId": 1,
+              "name": "Per User License",
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 12,
+              "valueDataType": "money"
+            },
+            "originalValue": 12,
+            "overriddenValue": 10,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "subscriptionPlanId": 2,
+        "billableServiceId": 7,
+        "service": {
+          "id": 7,
+          "appId": 1,
+          "name": "Advanced Analytics & Insights",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 5,
+            "subscriptionPlanItemId": 4,
+            "billableServiceChargeId": 12,
+            "charge": {
+              "id": 12,
+              "billableServiceId": 7,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 89,
+              "valueDataType": "money"
+            },
+            "originalValue": 89,
+            "overriddenValue": 89,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "subscriptionPlanId": 2,
+        "billableServiceId": 8,
+        "service": {
+          "id": 8,
+          "appId": 1,
+          "name": "Custom Reporting & Exports",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 6,
+            "subscriptionPlanItemId": 5,
+            "billableServiceChargeId": 13,
+            "charge": {
+              "id": 13,
+              "billableServiceId": 8,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 59,
+              "valueDataType": "money"
+            },
+            "originalValue": 59,
+            "overriddenValue": 59,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "POS Essential",
+    "description": "Complete point-of-sale solution for small retail businesses",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 31,
+    "items": [
+      {
+        "id": 6,
+        "subscriptionPlanId": 3,
+        "billableServiceId": 2,
+        "service": {
+          "id": 2,
+          "appId": 2,
+          "name": "POS App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 7,
+            "subscriptionPlanItemId": 6,
+            "billableServiceChargeId": 3,
+            "charge": {
+              "id": 3,
+              "billableServiceId": 2,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 79,
+              "valueDataType": "money"
+            },
+            "originalValue": 79,
+            "overriddenValue": 79,
+            "includedSeats": 2
+          },
+          {
+            "id": 8,
+            "subscriptionPlanItemId": 6,
+            "billableServiceChargeId": 4,
+            "charge": {
+              "id": 4,
+              "billableServiceId": 2,
+              "name": "Per Terminal License",
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 25,
+              "valueDataType": "money"
+            },
+            "originalValue": 25,
+            "overriddenValue": 25,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "subscriptionPlanId": 3,
+        "billableServiceId": 4,
+        "service": {
+          "id": 4,
+          "appId": null,
+          "name": "Payment Processing",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 9,
+            "subscriptionPlanItemId": 7,
+            "billableServiceChargeId": 7,
+            "charge": {
+              "id": 7,
+              "billableServiceId": 4,
+              "name": "Monthly Gateway Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 25,
+              "valueDataType": "money"
+            },
+            "originalValue": 25,
+            "overriddenValue": 25,
+            "includedSeats": null
+          },
+          {
+            "id": 10,
+            "subscriptionPlanItemId": 7,
+            "billableServiceChargeId": 8,
+            "charge": {
+              "id": 8,
+              "billableServiceId": 4,
+              "name": "Transaction Fee",
+              "type": "PerTransaction",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 0.25,
+              "valueDataType": "money"
+            },
+            "originalValue": 0.25,
+            "overriddenValue": 0.25,
+            "includedSeats": null
+          },
+          {
+            "id": 11,
+            "subscriptionPlanItemId": 7,
+            "billableServiceChargeId": 18,
+            "charge": {
+              "id": 18,
+              "billableServiceId": 4,
+              "name": "Processing Rate",
+              "type": "PercentageOfRevenue",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 2.9,
+              "valueDataType": "percentage"
+            },
+            "originalValue": 2.9,
+            "overriddenValue": 2.9,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "POS Complete",
+    "description": "Full-featured POS with inventory management and customer loyalty",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 18,
+    "items": [
+      {
+        "id": 8,
+        "subscriptionPlanId": 4,
+        "billableServiceId": 2,
+        "service": {
+          "id": 2,
+          "appId": 2,
+          "name": "POS App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 12,
+            "subscriptionPlanItemId": 8,
+            "billableServiceChargeId": 3,
+            "charge": {
+              "id": 3,
+              "billableServiceId": 2,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 79,
+              "valueDataType": "money"
+            },
+            "originalValue": 79,
+            "overriddenValue": 79,
+            "includedSeats": 5
+          },
+          {
+            "id": 13,
+            "subscriptionPlanItemId": 8,
+            "billableServiceChargeId": 4,
+            "charge": {
+              "id": 4,
+              "billableServiceId": 2,
+              "name": "Per Terminal License",
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 25,
+              "valueDataType": "money"
+            },
+            "originalValue": 25,
+            "overriddenValue": 20,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "subscriptionPlanId": 4,
+        "billableServiceId": 9,
+        "service": {
+          "id": 9,
+          "appId": 2,
+          "name": "Inventory Management Pro",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 14,
+            "subscriptionPlanItemId": 9,
+            "billableServiceChargeId": 14,
+            "charge": {
+              "id": 14,
+              "billableServiceId": 9,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 69,
+              "valueDataType": "money"
+            },
+            "originalValue": 69,
+            "overriddenValue": 69,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "subscriptionPlanId": 4,
+        "billableServiceId": 10,
+        "service": {
+          "id": 10,
+          "appId": 2,
+          "name": "Customer Loyalty Program",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 15,
+            "subscriptionPlanItemId": 10,
+            "billableServiceChargeId": 15,
+            "charge": {
+              "id": 15,
+              "billableServiceId": 10,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 49,
+              "valueDataType": "money"
+            },
+            "originalValue": 49,
+            "overriddenValue": 49,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "E-commerce Essentials",
+    "description": "Launch your online store with marketplace and SEO tools",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 62,
+    "items": [
+      {
+        "id": 11,
+        "subscriptionPlanId": 5,
+        "billableServiceId": 3,
+        "service": {
+          "id": 3,
+          "appId": 4,
+          "name": "Lister App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 16,
+            "subscriptionPlanItemId": 11,
+            "billableServiceChargeId": 5,
+            "charge": {
+              "id": 5,
+              "billableServiceId": 3,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 99,
+              "valueDataType": "money"
+            },
+            "originalValue": 99,
+            "overriddenValue": 99,
+            "includedSeats": null
+          },
+          {
+            "id": 17,
+            "subscriptionPlanItemId": 11,
+            "billableServiceChargeId": 6,
+            "charge": {
+              "id": 6,
+              "billableServiceId": 3,
+              "name": "Commission on Sales",
+              "type": "PercentageOfRevenue",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 2.5,
+              "valueDataType": "percentage"
+            },
+            "originalValue": 2.5,
+            "overriddenValue": 2.5,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "subscriptionPlanId": 5,
+        "billableServiceId": 12,
+        "service": {
+          "id": 12,
+          "appId": 4,
+          "name": "SEO & Marketing Tools",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 18,
+            "subscriptionPlanItemId": 12,
+            "billableServiceChargeId": 17,
+            "charge": {
+              "id": 17,
+              "billableServiceId": 12,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 79,
+              "valueDataType": "money"
+            },
+            "originalValue": 79,
+            "overriddenValue": 79,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "E-commerce Pro",
+    "description": "Premium marketplace platform with themes, SEO, and payment processing",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 29,
+    "items": [
+      {
+        "id": 13,
+        "subscriptionPlanId": 6,
+        "billableServiceId": 3,
+        "service": {
+          "id": 3,
+          "appId": 4,
+          "name": "Lister App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 19,
+            "subscriptionPlanItemId": 13,
+            "billableServiceChargeId": 5,
+            "charge": {
+              "id": 5,
+              "billableServiceId": 3,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 99,
+              "valueDataType": "money"
+            },
+            "originalValue": 99,
+            "overriddenValue": 99,
+            "includedSeats": null
+          },
+          {
+            "id": 20,
+            "subscriptionPlanItemId": 13,
+            "billableServiceChargeId": 6,
+            "charge": {
+              "id": 6,
+              "billableServiceId": 3,
+              "name": "Commission on Sales",
+              "type": "PercentageOfRevenue",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 2.5,
+              "valueDataType": "percentage"
+            },
+            "originalValue": 2.5,
+            "overriddenValue": 2,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "subscriptionPlanId": 6,
+        "billableServiceId": 11,
+        "service": {
+          "id": 11,
+          "appId": 4,
+          "name": "Premium Store Themes",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 21,
+            "subscriptionPlanItemId": 14,
+            "billableServiceChargeId": 16,
+            "charge": {
+              "id": 16,
+              "billableServiceId": 11,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 39,
+              "valueDataType": "money"
+            },
+            "originalValue": 39,
+            "overriddenValue": 39,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "subscriptionPlanId": 6,
+        "billableServiceId": 12,
+        "service": {
+          "id": 12,
+          "appId": 4,
+          "name": "SEO & Marketing Tools",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 22,
+            "subscriptionPlanItemId": 15,
+            "billableServiceChargeId": 17,
+            "charge": {
+              "id": 17,
+              "billableServiceId": 12,
+              "name": "Monthly Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 79,
+              "valueDataType": "money"
+            },
+            "originalValue": 79,
+            "overriddenValue": 79,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "subscriptionPlanId": 6,
+        "billableServiceId": 6,
+        "service": {
+          "id": 6,
+          "appId": null,
+          "name": "Payment Processing + Premium Support",
+          "isSystemDefault": false,
+          "category": "Bundle"
+        },
+        "values": [
+          {
+            "id": 23,
+            "subscriptionPlanItemId": 16,
+            "billableServiceChargeId": 11,
+            "charge": {
+              "id": 11,
+              "billableServiceId": 6,
+              "name": "Bundle Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 199,
+              "valueDataType": "money"
+            },
+            "originalValue": 199,
+            "overriddenValue": 199,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "All-in-One Enterprise",
+    "description": "Complete business suite with thrift production management, POS, and e-commerce platforms",
+    "status": 2,
+    "canShowOnWebsite": true,
+    "type": 1,
+    "companyId": -1,
+    "subscriptionCount": 8,
+    "items": [
+      {
+        "id": 17,
+        "subscriptionPlanId": 7,
+        "billableServiceId": 1,
+        "service": {
+          "id": 1,
+          "appId": 1,
+          "name": "TPM App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 24,
+            "subscriptionPlanItemId": 17,
+            "billableServiceChargeId": 1,
+            "charge": {
+              "id": 1,
+              "billableServiceId": 1,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 49,
+              "valueDataType": "money"
+            },
+            "originalValue": 49,
+            "overriddenValue": 49,
+            "includedSeats": 20
+          },
+          {
+            "id": 25,
+            "subscriptionPlanItemId": 17,
+            "billableServiceChargeId": 2,
+            "charge": {
+              "id": 2,
+              "billableServiceId": 1,
+              "name": "Per User License",
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 12,
+              "valueDataType": "money"
+            },
+            "originalValue": 12,
+            "overriddenValue": 8,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "subscriptionPlanId": 7,
+        "billableServiceId": 2,
+        "service": {
+          "id": 2,
+          "appId": 2,
+          "name": "POS App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 26,
+            "subscriptionPlanItemId": 18,
+            "billableServiceChargeId": 3,
+            "charge": {
+              "id": 3,
+              "billableServiceId": 2,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 79,
+              "valueDataType": "money"
+            },
+            "originalValue": 79,
+            "overriddenValue": 79,
+            "includedSeats": 10
+          },
+          {
+            "id": 27,
+            "subscriptionPlanItemId": 18,
+            "billableServiceChargeId": 4,
+            "charge": {
+              "id": 4,
+              "billableServiceId": 2,
+              "name": "Per Terminal License",
+              "type": "PerSeat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 25,
+              "valueDataType": "money"
+            },
+            "originalValue": 25,
+            "overriddenValue": 18,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "subscriptionPlanId": 7,
+        "billableServiceId": 3,
+        "service": {
+          "id": 3,
+          "appId": 4,
+          "name": "Lister App Access",
+          "isSystemDefault": true,
+          "category": "AppAccess"
+        },
+        "values": [
+          {
+            "id": 28,
+            "subscriptionPlanItemId": 19,
+            "billableServiceChargeId": 5,
+            "charge": {
+              "id": 5,
+              "billableServiceId": 3,
+              "name": "Base Subscription",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 99,
+              "valueDataType": "money"
+            },
+            "originalValue": 99,
+            "overriddenValue": 99,
+            "includedSeats": null
+          },
+          {
+            "id": 29,
+            "subscriptionPlanItemId": 19,
+            "billableServiceChargeId": 6,
+            "charge": {
+              "id": 6,
+              "billableServiceId": 3,
+              "name": "Commission on Sales",
+              "type": "PercentageOfRevenue",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 2.5,
+              "valueDataType": "percentage"
+            },
+            "originalValue": 2.5,
+            "overriddenValue": 1.5,
+            "includedSeats": null
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "subscriptionPlanId": 7,
+        "billableServiceId": 5,
+        "service": {
+          "id": 5,
+          "appId": null,
+          "name": "Premium Support",
+          "isSystemDefault": false,
+          "category": "AddOn"
+        },
+        "values": [
+          {
+            "id": 30,
+            "subscriptionPlanItemId": 20,
+            "billableServiceChargeId": 9,
+            "charge": {
+              "id": 9,
+              "billableServiceId": 5,
+              "name": "Monthly Support Fee",
+              "type": "Flat",
+              "frequency": "PerBillingCycle",
+              "defaultValue": 199,
+              "valueDataType": "money"
+            },
+            "originalValue": 199,
+            "overriddenValue": 199,
+            "includedSeats": null
+          },
+          {
+            "id": 31,
+            "subscriptionPlanItemId": 20,
+            "billableServiceChargeId": 10,
+            "charge": {
+              "id": 10,
+              "billableServiceId": 5,
+              "name": "Onboarding & Setup",
+              "type": "Flat",
+              "frequency": "OneTime",
+              "defaultValue": 499,
+              "valueDataType": "money"
+            },
+            "originalValue": 499,
+            "overriddenValue": 0,
+            "includedSeats": null
+          }
+        ]
+      }
+    ]
+  }
+]

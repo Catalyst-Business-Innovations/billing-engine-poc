@@ -1,0 +1,131 @@
+// ─── Variables ────────────────────────────────────────────────────────────────
+$blue: #0070b9;
+$blue-dark: #005a95;
+$blue-light: #e6f2fa;
+$border: #dde1ea;
+$bg: #f4f6f9;
+$text: #1a2332;
+$muted: #6b7a94;
+
+.navigation {
+  background: #fff;
+  border-bottom: 1px solid $border;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.nav-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 70px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e6f2fa 0%, #f8fafc 100%);
+  border-radius: 12px;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: $text;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  color: $muted;
+  font-weight: 500;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: $muted;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+
+  svg {
+    flex-shrink: 0;
+    transition: all 0.18s;
+  }
+
+  &:hover {
+    background: $bg;
+    color: $text;
+  }
+
+  &.active {
+    background: $blue;
+    color: #fff;
+
+    &:hover {
+      background: $blue-dark;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 16px;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .nav-brand {
+    width: 100%;
+  }
+
+  .nav-links {
+    width: 100%;
+
+    .nav-link {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+}

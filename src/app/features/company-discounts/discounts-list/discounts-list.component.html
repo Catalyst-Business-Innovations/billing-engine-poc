@@ -1,0 +1,145 @@
+<div class="discounts-page">
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Company Discounts</h1>
+      <p class="page-subtitle">Manage company-specific discounts for subscription plans</p>
+    </div>
+    <button class="btn btn-primary" (click)="onAddDiscount()">
+      <app-icon name="plus"></app-icon>
+      Add Discount
+    </button>
+  </header>
+
+  <!-- Filters and Search -->
+  <div class="page-filters">
+    <div class="search-box">
+      <app-icon name="search" class="search-icon" width="18" height="18"></app-icon>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by company name, ID, or reason..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+      />
+      <button *ngIf="searchText" class="search-clear" (click)="searchText = ''; onSearchChange()">✕</button>
+    </div>
+
+    <div class="status-filters">
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus === DiscountFilterStatus.All"
+        (click)="setStatusFilter(DiscountFilterStatus.All)"
+      >
+        All
+        <span class="filter-count">{{ getStatusCount(DiscountFilterStatus.All) }}</span>
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus === DiscountFilterStatus.Active"
+        (click)="setStatusFilter(DiscountFilterStatus.Active)"
+      >
+        Active
+        <span class="filter-count">{{ getStatusCount(DiscountFilterStatus.Active) }}</span>
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus === DiscountFilterStatus.Inactive"
+        (click)="setStatusFilter(DiscountFilterStatus.Inactive)"
+      >
+        Inactive
+        <span class="filter-count">{{ getStatusCount(DiscountFilterStatus.Inactive) }}</span>
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus === DiscountFilterStatus.Expired"
+        (click)="setStatusFilter(DiscountFilterStatus.Expired)"
+      >
+        Expired
+        <span class="filter-count">{{ getStatusCount(DiscountFilterStatus.Expired) }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Discounts List -->
+  <div class="discounts-container">
+    <div *ngIf="filteredDiscounts.length === 0" class="empty-state">
+      <h3 class="empty-title">No discounts found</h3>
+      <p class="empty-text">
+        {{
+          searchText ? 'Try adjusting your search or filters' : 'Get started by creating your first company discount'
+        }}
+      </p>
+      <button *ngIf="!searchText" class="btn btn-primary" (click)="onAddDiscount()">Create First Discount</button>
+    </div>
+
+    <div class="discounts-grid" *ngIf="filteredDiscounts.length > 0">
+      <div
+        *ngFor="let discount of filteredDiscounts; trackBy: trackByDiscountId"
+        class="discount-card"
+        (click)="onEditDiscount(discount.id)"
+      >
+        <div class="card-header">
+          <div class="company-info">
+            <h3 class="company-name">{{ discount.company.name }}</h3>
+            <span class="company-id">{{ discount.company.code }}</span>
+          </div>
+          <div
+            class="discount-badge"
+            [class.percentage]="discount.discountType === 'Percentage'"
+            [class.flat]="discount.discountType === 'FlatAmount'"
+          >
+            <span class="discount-value">{{ formatDiscountValue(discount) }}</span>
+            <span class="discount-type">{{ discount.discountType === 'Percentage' ? 'Off' : 'Discount' }}</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">Reason:</span>
+            <span class="value">{{ discount.reason }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Effective Period:</span>
+            <span class="value"
+              >{{ formatDate(discount.effectiveStartDate) }} - {{ formatDate(discount.effectiveEndDate) }}</span
+            >
+          </div>
+          <div class="info-row" *ngIf="discount.notes">
+            <span class="label">Notes:</span>
+            <span class="value notes">{{ discount.notes }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="footer-left">
+            <span class="status-badge" [class]="getStatusBadgeClass(discount)">
+              {{ getStatusLabel(discount) }}
+            </span>
+            <span class="created-info">Created by {{ discount.createdBy }}</span>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn" (click)="onEditDiscount(discount.id); $event.stopPropagation()" title="Edit">
+              <app-icon name="edit"></app-icon>
+            </button>
+            <button class="action-btn danger" (click)="deleteDiscount(discount, $event)" title="Delete">
+              <app-icon name="delete"></app-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isVisible]="showDeleteConfirmDialog"
+    title="Delete Discount?"
+    [message]="getDeleteMessage()"
+    confirmText="Delete"
+    cancelText="Cancel"
+    confirmButtonClass="btn-danger"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()">
+  </app-confirmation-dialog>
+</div>
