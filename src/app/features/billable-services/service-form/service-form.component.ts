@@ -10,7 +10,7 @@ import { BillableServiceService } from '../services/billable-service.service';
 })
 export class ServiceFormComponent implements OnInit {
   @Input() serviceId: number | null = null;
-  @Input() category: 'AddOn' | 'Bundle' | null = null;
+  @Input() category: 'AppAccess' | 'AddOn' | 'Bundle' | null = null;
   @Output() closeForm = new EventEmitter<void>();
   @Output() saveService = new EventEmitter<any>();
 
@@ -67,6 +67,10 @@ export class ServiceFormComponent implements OnInit {
     // Set category from input when creating a new service
     if (!this.serviceId && this.category) {
       this.formData.category = this.category;
+      // AppAccess services must always be system default
+      if (this.category === 'AppAccess') {
+        this.formData.isSystemDefault = true;
+      }
     }
 
     // Load available add-ons for bundle selection
@@ -151,6 +155,10 @@ export class ServiceFormComponent implements OnInit {
     return this.category !== null && !this.serviceId;
   }
 
+  isAppAccessChargeEdit(): boolean {
+    return this.formData.category === 'AppAccess' && this.editingChargeIndex !== null;
+  }
+
   // Charge Management Methods
   openChargeForm(): void {
     this.resetChargeForm();
@@ -218,6 +226,11 @@ export class ServiceFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.formData.name.trim() && this.charges.length > 0) {
+      // Ensure AppAccess services are always system default
+      if (this.formData.category === 'AppAccess') {
+        this.formData.isSystemDefault = true;
+      }
+      
       this.saveService.emit({
         ...this.formData,
         charges: this.charges,
