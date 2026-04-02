@@ -164,7 +164,7 @@ export class HomeComponent {
       description: 'Metabase analytics integration prototype with dashboards, reports, and data exploration.',
       route: '/analytics',
       icon: '\u{1F4CA}',
-      tags: ['Dashboards', 'Reports', 'Metabase']
+      tags: ['TPM', 'POS', 'Lister', 'Donation']
     }
   ];
 
