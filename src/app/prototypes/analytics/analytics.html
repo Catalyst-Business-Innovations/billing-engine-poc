@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brijjworks — Metabase Analytics Integration Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;color:#1E293B;background:#F1F5F9;-webkit-font-smoothing:antialiased}
+
+/* Proto Navigator */
+.proto-root{display:flex;height:100vh}
+.proto-nav{width:200px;flex-shrink:0;background:#0F172A;overflow-y:auto;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)}
+.proto-nav-title{padding:16px 16px 12px;font-size:10px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase}
+.proto-group{padding:0 8px 8px}
+.proto-group-label{font-size:10px;font-weight:700;color:#3B82F6;letter-spacing:.08em;text-transform:uppercase;padding:10px 8px 6px}
+.proto-item{display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:6px;font-size:12px;color:#94A3B8;font-family:inherit;transition:all .2s ease}
+.proto-item:hover{background:rgba(59,130,246,.1);color:#CBD5E1}
+.proto-item.active{background:#3B82F6;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+
+/* Shell */
+.bw-shell{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.bw-topbar{height:52px;background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06)}
+.bw-logo{font-size:16px;font-weight:700;color:#fff;letter-spacing:.06em}
+.bw-company{font-size:12px;color:#93C5FD;padding:4px 12px;background:rgba(59,130,246,.15);border-radius:20px;font-weight:500}
+.bw-user-area{margin-left:auto;display:flex;align-items:center;gap:10px}
+.bw-user-name{font-size:12px;color:rgba(255,255,255,.6)}
+.bw-user{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#6366F1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+.bw-body{flex:1;display:flex;overflow:hidden}
+
+/* Sidebar */
+.bw-sidebar{width:56px;background:#0F172A;display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px;flex-shrink:0;border-right:1px solid rgba(255,255,255,.06)}
+.bw-nav-item{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s ease;color:#64748B;background:none;border:none}
+.bw-nav-item:hover{background:rgba(59,130,246,.1);color:#93C5FD}
+.bw-nav-item.active{background:#3B82F6;color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+.bw-nav-sep{height:1px;background:rgba(255,255,255,.06);width:28px;margin:6px 0}
+
+/* Content */
+.bw-content{flex:1;overflow-y:auto;background:#F8FAFC;padding:28px;position:relative}
+
+/* Cards */
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card-header{padding:16px 20px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:20px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:.01em}
+.b-green{background:#DCFCE7;color:#15803D}
+.b-red{background:#FEE2E2;color:#DC2626}
+.b-amber{background:#FEF3C7;color:#B45309}
+.b-gray{background:#F1F5F9;color:#64748B}
+.b-blue{background:#DBEAFE;color:#2563EB}
+.b-purple{background:#F3E8FF;color:#7C3AED}
+.b-indigo{background:#E0E7FF;color:#4338CA}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;border:none;transition:all .2s ease;letter-spacing:.01em}
+.btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff}
+.btn-primary:hover{box-shadow:0 4px 12px rgba(59,130,246,.35)}
+.btn-outline{background:#fff;color:#1E293B;border:1px solid #D1D5DB}
+.btn-outline:hover{background:#F8FAFC;border-color:#94A3B8}
+.btn-danger{background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff}
+.btn-danger:hover{box-shadow:0 4px 12px rgba(239,68,68,.35)}
+.btn-ghost{background:transparent;color:#3B82F6;border:1px solid #93C5FD}
+.btn-ghost:hover{background:#EFF6FF}
+.btn-success{background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+.btn-lg{padding:11px 24px;font-size:14px;border-radius:10px}
+.btn-icon{width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:#F8FAFC;border:1px solid #E2E8F0;color:#64748B;cursor:pointer;transition:all .2s}
+.btn-icon:hover{background:#EFF6FF;color:#3B82F6;border-color:#93C5FD}
+.btn-icon-danger:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+
+/* Inputs */
+input,select{font-family:inherit;font-size:13px;padding:9px 12px;border:1px solid #D1D5DB;border-radius:8px;outline:none;background:#fff;color:#1E293B;width:100%;transition:all .2s ease}
+input:focus,select:focus{border-color:#3B82F6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+input::placeholder{color:#94A3B8}
+label{font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:6px;letter-spacing:.02em}
+
+/* Tabs */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid #E2E8F0;margin-bottom:24px}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;letter-spacing:.01em}
+.tab.active{color:#3B82F6;border-bottom-color:#3B82F6}
+.tab:hover:not(.active){color:#1E293B;background:rgba(59,130,246,.04)}
+
+/* Segmented Control */
+.seg-ctrl{display:inline-flex;background:#F1F5F9;border-radius:8px;padding:3px;gap:2px;border:1px solid #E2E8F0}
+.seg-btn{padding:7px 14px;font-size:12px;font-weight:600;color:#64748B;cursor:pointer;border-radius:6px;border:none;background:transparent;font-family:inherit;transition:all .2s}
+.seg-btn.active{background:#fff;color:#1E293B;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.seg-btn:hover:not(.active){color:#1E293B}
+
+/* Table */
+.table{width:100%;border-collapse:separate;border-spacing:0}
+.table th{text-align:left;font-size:11px;font-weight:700;color:#64748B;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;border-bottom:2px solid #E2E8F0;background:#FAFBFC}
+.table td{padding:12px 14px;border-bottom:1px solid #F1F5F9;vertical-align:middle;transition:background .15s}
+.table tr:hover td{background:#F8FAFC}
+.table tr:last-child td{border-bottom:none}
+
+/* Misc */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot-green{background:#22C55E}
+.dot-amber{background:#F59E0B}
+.dot-gray{background:#94A3B8}
+.dot-red{background:#EF4444}
+
+/* Wizard */
+.wizard-step{display:flex;gap:14px;padding:12px 0;align-items:flex-start}
+.step-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:700;transition:all .3s}
+.step-content{flex:1;padding-top:5px}
+.step-label{font-size:13px;font-weight:600;color:#1E293B}
+.step-sub{font-size:12px;color:#64748B;margin-top:2px}
+.step-connector{width:2px;height:18px;background:#E2E8F0;margin:2px 0 2px 15px;transition:background .3s}
+
+/* Stats */
+.stat-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:20px;flex:1;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stat-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06);transform:translateY(-1px)}
+.stat-val{font-size:28px;font-weight:800;color:#0F172A;letter-spacing:-.02em}
+.stat-label{font-size:12px;color:#64748B;margin-top:4px;font-weight:500}
+
+/* Overlay & Modal */
+.overlay{position:absolute;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal{background:#fff;border-radius:14px;border:1px solid #E2E8F0;width:520px;max-height:88%;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-header{padding:18px 22px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;justify-content:space-between}
+.modal-body{padding:22px}
+.modal-footer{padding:16px 22px;border-top:1px solid #F1F5F9;display:flex;justify-content:flex-end;gap:8px}
+
+/* Progress */
+.pbar{height:5px;background:#E2E8F0;border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;background:linear-gradient(90deg,#3B82F6,#6366F1);border-radius:3px;transition:width .5s ease}
+
+/* Metabase Chrome */
+.mb-chrome{background:#509EE3;height:38px;display:flex;align-items:center;padding:0 18px;gap:18px;flex-shrink:0}
+.mb-logo{font-size:13px;font-weight:700;color:#fff;letter-spacing:.02em}
+.mb-nav-item{font-size:12px;color:rgba(255,255,255,.7);cursor:pointer}
+.mb-nav-item.mb-active{color:#fff;font-weight:600}
+
+/* Metric Cards */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px}
+.bar{border-radius:4px 4px 0 0;background:linear-gradient(180deg,#3B82F6,#2563EB);min-width:18px;transition:height .3s}
+.bar-alt{background:linear-gradient(180deg,#93C5FD,#60A5FA)}
+.metric-card{background:#FAFBFC;border:1px solid #E2E8F0;border-radius:10px;padding:14px 18px}
+.metric-val{font-size:22px;font-weight:800;color:#0F172A;letter-spacing:-.02em}
+.metric-lbl{font-size:11px;color:#64748B;font-weight:500}
+.metric-chg{font-size:11px;color:#16A34A;font-weight:600}
+
+/* Alerts */
+.alert{display:flex;gap:10px;padding:12px 16px;border-radius:10px;font-size:13px;align-items:flex-start}
+.alert-warn{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E}
+.alert-err{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}
+.alert-info{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF}
+.alert-succ{background:#F0FDF4;border:1px solid #BBF7D0;color:#166534}
+
+/* App Sidebar */
+.analytics-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:#64748B;transition:all .2s}
+.analytics-item:hover{background:rgba(59,130,246,.1);color:#3B82F6}
+.analytics-item.ai-active{background:rgba(59,130,246,.15);color:#3B82F6}
+.bw-sidebar-wide{width:210px;background:#0F172A;padding:14px 10px;overflow-y:auto;flex-shrink:0;border-right:1px solid rgba(255,255,255,.06)}
+.sw-section{font-size:10px;font-weight:700;color:#475569;letter-spacing:.08em;padding:12px 8px 6px;text-transform:uppercase}
+.sw-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:#94A3B8;font-weight:500;transition:all .2s}
+.sw-item:hover{background:rgba(255,255,255,.06);color:#CBD5E1}
+.sw-item.active{background:rgba(59,130,246,.2);color:#60A5FA}
+.sw-sep{height:1px;background:rgba(255,255,255,.06);margin:8px 0}
+
+/* Permissions */
+.perm-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F1F5F9;transition:background .15s}
+.perm-row:last-child{border-bottom:none}
+.perm-row:hover{background:#FAFBFC}
+.drag-handle{cursor:grab;color:#CBD5E1;padding:0 4px}
+
+/* Chips */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;font-size:12px;font-weight:500;color:#1D4ED8}
+.chip-role{background:#F3E8FF;border-color:#D8B4FE;color:#7C3AED}
+.chip-remove{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.06);border:none;font-size:10px;color:inherit;transition:background .15s}
+.chip-remove:hover{background:rgba(0,0,0,.12)}
+
+/* Error */
+.error-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;text-align:center;padding:40px}
+
+/* Tooltip */
+.tooltip-wrap{position:relative}
+.tooltip-text{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;font-size:11px;padding:4px 10px;border-radius:6px;white-space:nowrap;z-index:99}
+.tooltip-wrap:hover .tooltip-text{display:block}
+
+/* Empty state */
+.empty-state{text-align:center;padding:32px 20px;color:#94A3B8}
+.empty-state-icon{font-size:32px;margin-bottom:8px;opacity:.5}
+.empty-state-title{font-size:14px;font-weight:600;color:#64748B;margin-bottom:4px}
+.empty-state-sub{font-size:12px;color:#94A3B8}
+
+/* Animations */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 1.5s ease infinite}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.slide-up{animation:slideUp .35s ease}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+const {useState,useEffect,useRef}=React;
+const e=React.createElement;
+
+const SCREENS=[
+  {group:"Integration Setup",items:[
+    {id:"not-connected",label:"Not Connected"},
+    {id:"wizard-running",label:"Wizard — Running"},
+    {id:"wizard-error",label:"Wizard — Step Failed"},
+    {id:"wizard-complete",label:"Wizard — Complete"},
+    {id:"connected",label:"Connected (Connection tab)"},
+    {id:"degraded",label:"Degraded"},
+    {id:"disconnect-dialog",label:"Disconnect Dialog"},
+  ]},
+  {group:"Analytics Users",items:[
+    {id:"users-list",label:"User List"},
+    {id:"add-user",label:"Add User"},
+  ]},
+  {group:"Dashboard Mappings",items:[
+    {id:"mappings-list",label:"Mapping List"},
+    {id:"create-mapping",label:"Create Mapping"},
+    {id:"edit-mapping",label:"Edit + Permissions"},
+  ]},
+  {group:"App Experience",items:[
+    {id:"app-menu",label:"Dynamic Analytics Menu"},
+    {id:"embedded",label:"Embedded Dashboard"},
+    {id:"err-noaccess",label:"Error — No Access"},
+    {id:"err-unavailable",label:"Error — Unavailable"},
+    {id:"err-disconnected",label:"Error — Disconnected"},
+  ]},
+];
+
+const WIZARD_STEPS=[
+  {label:"Provision K8s resources",sub:"Namespace, Deployment, Service, Ingress, PVC, Secrets"},
+  {label:"Wait for pod readiness",sub:"Metabase JVM startup (~30-60s)"},
+  {label:"Create PostgreSQL user",sub:"bw_acmecorp_ro + mapping table entry"},
+  {label:"Register DB connection",sub:"Analytics connection in Metabase instance"},
+  {label:"Create permission group",sub:"Analytics Users group"},
+  {label:"Create default collection",sub:"Dashboards collection"},
+  {label:"Finalise connection",sub:"Store instance URL, mark Connected"},
+];
+
+const USERS=[
+  {id:1,name:"Priya Nair",email:"priya@acmecorp.com",status:"active",added:"12 Jan 2025",role:"Collection Editor"},
+  {id:2,name:"Rahul Desai",email:"rahul@acmecorp.com",status:"active",added:"12 Jan 2025",role:"Collection Editor"},
+  {id:3,name:"Sneha Kulkarni",email:"sneha@acmecorp.com",status:"pending",added:"Today",role:"Collection Editor"},
+  {id:4,name:"Amit Shah",email:"amit@acmecorp.com",status:"deactivated",added:"5 Jan 2025",role:"-"},
+];
+
+const MAPPINGS=[
+  {id:1,name:"Sales Overview",app:"CRM",dash:"Monthly Sales Report",status:"active",perms:3,permType:"role",permDetail:"CRM Manager",extras:["Sales Analyst","ViewSalesReport"]},
+  {id:2,name:"Lead Funnel",app:"CRM",dash:"Lead Pipeline Analysis",status:"active",perms:2,permType:"role",permDetail:"CRM Manager",extras:["ViewLeadFunnel"]},
+  {id:3,name:"Support Metrics",app:"Helpdesk",dash:"Support KPIs Q4",status:"stale",perms:1,permType:"role",permDetail:"Support Lead",extras:[]},
+  {id:4,name:"Revenue Trends",app:"Finance",dash:"Revenue Dashboard 2025",status:"active",perms:4,permType:"role",permDetail:"Finance Viewer",extras:["ViewRevenue","Audit Access"]},
+];
+
+const BW_USERS=[
+  {id:5,name:"Kavita Sharma",email:"kavita@acmecorp.com",role:"Manager"},
+  {id:6,name:"Deepak Iyer",email:"deepak@acmecorp.com",role:"Analyst"},
+  {id:7,name:"Meera Pillai",email:"meera@acmecorp.com",role:"Director"},
+];
+
+const MB_DASHBOARDS=["Monthly Sales Report","Lead Pipeline Analysis","Revenue Dashboard 2025","User Acquisition Funnel","Customer Retention Metrics","Product Usage Overview"];
+const APPS=["CRM","Helpdesk","Finance","HR","Operations"];
+const ROLES=[
+  {name:"CRM Manager",app:"CRM",members:4},
+  {name:"Sales Analyst",app:"CRM",members:6},
+  {name:"Finance Viewer",app:"Finance",members:3},
+  {name:"Operations Lead",app:"Operations",members:2},
+  {name:"Support Lead",app:"Helpdesk",members:5},
+  {name:"HR Admin",app:"HR",members:2},
+];
+
+/* ── Helpers ── */
+const Badge=({type,children})=>{
+  const cls={active:"b-green",connected:"b-green",pending:"b-amber",degraded:"b-amber",deactivated:"b-gray",stale:"b-red",error:"b-red","not-connected":"b-gray",disconnected:"b-gray",suspended:"b-gray"}[type]||"b-gray";
+  return e("span",{className:"badge "+cls},children);
+};
+
+const Btn=({children,variant="primary",size="",onClick,disabled,style:s})=>
+  e("button",{className:`btn btn-${variant} ${size?"btn-"+size:""}`,onClick,disabled,style:{opacity:disabled?.5:1,cursor:disabled?"not-allowed":"pointer",...s}},children);
+
+const StepIcon=({state,num})=>{
+  const s={pending:{bg:"#F1F5F9",color:"#94A3B8"},running:{bg:"#DBEAFE",color:"#3B82F6"},complete:{bg:"#DCFCE7",color:"#16A34A"},error:{bg:"#FEE2E2",color:"#DC2626"}}[state];
+  const content=state==="complete"?"checkmark":state==="error"?"X":state==="running"?e("span",{className:"spin",style:{fontSize:12}},"loader"):num;
+  return e("div",{className:"step-icon",style:{background:s.bg,color:s.color}},
+    state==="complete"?SVG_ICONS.check:state==="error"?SVG_ICONS.x:state==="running"?e("span",{className:"spin",style:{fontSize:12}},"*"):num
+  );
+};
+
+const SVG_ICONS={
+  home:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"}),e("polyline",{points:"9 22 9 12 15 12 15 22"})),
+  users:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"}),e("circle",{cx:"9",cy:"7",r:"4"}),e("path",{d:"M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"})),
+  chart:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("line",{x1:"18",y1:"20",x2:"18",y2:"10"}),e("line",{x1:"12",y1:"20",x2:"12",y2:"4"}),e("line",{x1:"6",y1:"20",x2:"6",y2:"14"}),e("line",{x1:"2",y1:"20",x2:"22",y2:"20"})),
+  settings:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("circle",{cx:"12",cy:"12",r:"3"}),e("path",{d:"M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"})),
+  help:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("circle",{cx:"12",cy:"12",r:"10"}),e("path",{d:"M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"})),
+  money:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("line",{x1:"12",y1:"1",x2:"12",y2:"23"}),e("path",{d:"M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"})),
+  plug:e("svg",{width:16,height:16,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M18.36 6.64a9 9 0 11-12.73 0M12 2v10"})),
+  plus:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2.5,viewBox:"0 0 24 24"},e("line",{x1:"12",y1:"5",x2:"12",y2:"19"}),e("line",{x1:"5",y1:"12",x2:"19",y2:"12"})),
+  trash:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("polyline",{points:"3 6 5 6 21 6"}),e("path",{d:"M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"})),
+  edit:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"}),e("path",{d:"M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"})),
+  warn:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"}),e("line",{x1:"12",y1:"9",x2:"12",y2:"13"}),e("line",{x1:"12",y1:"17",x2:"12.01",y2:"17"})),
+  check:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2.5,viewBox:"0 0 24 24"},e("polyline",{points:"20 6 9 17 4 12"})),
+  x:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2.5,viewBox:"0 0 24 24"},e("line",{x1:"18",y1:"6",x2:"6",y2:"18"}),e("line",{x1:"6",y1:"6",x2:"18",y2:"18"})),
+  grip:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("line",{x1:"9",y1:"5",x2:"9",y2:"19"}),e("line",{x1:"15",y1:"5",x2:"15",y2:"19"})),
+  shield:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})),
+  search:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("circle",{cx:"11",cy:"11",r:"8"}),e("line",{x1:"21",y1:"21",x2:"16.65",y2:"16.65"})),
+  role:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("rect",{x:"2",y:"7",width:"20",height:"14",rx:"2",ry:"2"}),e("path",{d:"M16 7V5a4 4 0 00-8 0v2"})),
+  link:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"}),e("path",{d:"M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"})),
+  eye:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("path",{d:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"}),e("circle",{cx:"12",cy:"12",r:"3"})),
+  refresh:e("svg",{width:14,height:14,fill:"none",stroke:"currentColor",strokeWidth:2,viewBox:"0 0 24 24"},e("polyline",{points:"23 4 23 10 17 10"}),e("path",{d:"M20.49 15a9 9 0 11-2.12-9.36L23 10"})),
+};
+
+/* ── Layout Components ── */
+const ProtoNav=({screen,onSelect})=>
+  e("div",{className:"proto-nav"},
+    e("div",{className:"proto-nav-title"},"Prototype Navigator"),
+    SCREENS.map(g=>e("div",{className:"proto-group",key:g.group},
+      e("div",{className:"proto-group-label"},g.group),
+      g.items.map(item=>e("button",{key:item.id,className:"proto-item"+(screen===item.id?" active":""),onClick:()=>onSelect(item.id)},item.label))
+    ))
+  );
+
+const TopBar=()=>e("div",{className:"bw-topbar"},
+  e("span",{className:"bw-logo"},"BRIJJWORKS"),
+  e("span",{className:"bw-company"},"Acme Corp"),
+  e("div",{className:"bw-user-area"},
+    e("span",{className:"bw-user-name"},"Arjun Mehta (Admin)"),
+    e("div",{className:"bw-user"},"AM")
+  )
+);
+
+const Sidebar=({type="icon",activeApp=""})=>{
+  if(type==="wide") return e("div",{className:"bw-sidebar-wide"},
+    e("div",{className:"sw-section"},"Main"),
+    ...[["Home","home"],["CRM","users"],["Helpdesk","help"],["Finance","money"]].map(([l,i])=>
+      e("div",{key:l,className:"sw-item"+(activeApp===l?" active":"")},SVG_ICONS[i],l)
+    ),
+    e("div",{className:"sw-sep"}),
+    e("div",{className:"sw-section"},"Analytics"),
+    e("div",{className:"sw-item active",style:{background:"rgba(59,130,246,.15)",color:"#60A5FA"}},SVG_ICONS.chart,"Analytics"),
+    e("div",{className:"sw-sep"}),
+    e("div",{className:"sw-section"},"Settings"),
+    e("div",{className:"sw-item"},SVG_ICONS.settings,"Settings")
+  );
+  return e("div",{className:"bw-sidebar"},
+    ...[["home","Home"],["users","CRM"],["help","Helpdesk"],["money","Finance"]].map(([i,t])=>
+      e("div",{key:i,className:"bw-nav-item",title:t},SVG_ICONS[i])
+    ),
+    e("div",{className:"bw-nav-sep"}),
+    e("div",{className:"bw-nav-item active",title:"Settings"},SVG_ICONS.settings)
+  );
+};
+
+/* ── Screen: Not Connected ── */
+const ScreenNotConnected=({onNavigate})=>
+  e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}},
+      e("div",null,
+        e("div",{style:{display:"flex",alignItems:"center",gap:12,marginBottom:6}},
+          e("span",{style:{fontSize:22,fontWeight:700,color:"#0F172A"}},"Metabase Analytics"),
+          e(Badge,{type:"not-connected"},"Not connected")
+        ),
+        e("div",{style:{fontSize:13,color:"#64748B"}},"Connect to Metabase to enable embedded analytics dashboards in your apps.")
+      )
+    ),
+    e("div",{className:"card",style:{marginBottom:20}},
+      e("div",{className:"card-body"},
+        e("div",{style:{display:"flex",gap:24}},
+          e("div",{style:{flex:1}},
+            e("div",{style:{fontSize:14,fontWeight:700,color:"#0F172A",marginBottom:10}},"What this integration does"),
+            ...[
+              "Provision a dedicated Metabase instance in your AKS cluster",
+              "Create a scoped PostgreSQL user for your analytics schema",
+              "Map Metabase dashboards to app navigation menus",
+              "Embed dashboards directly inside Brijjworks with data isolation"
+            ].map(t=>
+              e("div",{key:t,style:{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}},
+                e("span",{style:{color:"#22C55E",marginTop:2,flexShrink:0}},SVG_ICONS.check),
+                e("span",{style:{fontSize:13,color:"#374151"}},t)
+              )
+            )
+          ),
+          e("div",{style:{width:1,background:"#F1F5F9"}}),
+          e("div",{style:{flex:1}},
+            e("div",{style:{fontSize:14,fontWeight:700,color:"#0F172A",marginBottom:10}},"Pre-requisites"),
+            ...[
+              ["AKS RBAC permissions configured","green"],
+              ["Metabase OSS image available","green"],
+              ["Analytics schema views deployed","green"],
+              ["Email service configured","green"]
+            ].map(([t,c])=>
+              e("div",{key:t,style:{display:"flex",gap:10,alignItems:"center",marginBottom:8}},
+                e("span",{className:"dot dot-"+c}),
+                e("span",{style:{fontSize:13,color:"#374151"}},t)
+              )
+            )
+          )
+        )
+      )
+    ),
+    e(Btn,{variant:"primary",size:"lg",onClick:()=>onNavigate("wizard-running")},SVG_ICONS.plug," Connect to Metabase")
+  );
+
+/* ── Screen: Wizard ── */
+const ScreenWizard=({mode="running",onNavigate})=>{
+  const [steps,setSteps]=useState(Array(7).fill("pending"));
+  const [current,setCurrent]=useState(-1);
+  const [elapsed,setElapsed]=useState(0);
+  const elRef=useRef(null);
+  useEffect(()=>{if(current===-1)setCurrent(0);},[]);
+  useEffect(()=>{
+    if(current<0||current>=7) return;
+    setSteps(p=>{const n=[...p];n[current]="running";return n;});
+    const dur=mode==="error"&&current===2?1800:[1600,2400,900,800,700,600,500][current];
+    const t=setTimeout(()=>{
+      if(mode==="error"&&current===2){setSteps(p=>{const n=[...p];n[2]="error";return n;});setCurrent(99);}
+      else{setSteps(p=>{const n=[...p];n[current]="complete";return n;});setCurrent(current<6?current+1:7);}
+    },dur);
+    return()=>clearTimeout(t);
+  },[current]);
+  useEffect(()=>{
+    if(current===1&&steps[1]==="running"){elRef.current=setInterval(()=>setElapsed(ee=>ee+1),1000);return()=>clearInterval(elRef.current);}
+    return()=>clearInterval(elRef.current);
+  },[current,steps[1]]);
+  const pct=mode==="complete"?100:Math.round((steps.filter(s=>s==="complete").length/7)*100);
+  const allDone=mode==="complete"||current===7;
+  return e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}},
+      e("div",null,
+        e("div",{style:{fontSize:22,fontWeight:700,color:"#0F172A",marginBottom:4}},allDone?"Connection complete!":mode==="error"?"Provisioning failed":"Connecting to Metabase..."),
+        e("div",{style:{fontSize:13,color:"#64748B"}},allDone?"Your Metabase instance is ready.":mode==="error"?"A step failed. Review and retry.":"Provisioning your dedicated Metabase instance in AKS.")
+      )
+    ),
+    e("div",{className:"card"},
+      e("div",{className:"card-header"},
+        e("span",{style:{fontSize:14,fontWeight:700,color:"#0F172A"}},allDone?"All steps complete":`Step ${Math.min(current+1,7)} of 7`),
+        e("div",{style:{display:"flex",alignItems:"center",gap:12}},
+          e("div",{className:"pbar",style:{width:140}},e("div",{className:"pbar-fill",style:{width:pct+"%"}})),
+          e("span",{style:{fontSize:12,fontWeight:600,color:pct===100?"#16A34A":"#64748B",minWidth:36}},pct+"%")
+        )
+      ),
+      e("div",{className:"card-body",style:{paddingTop:14,paddingBottom:14}},
+        WIZARD_STEPS.map((s,i)=>{
+          const st=mode==="complete"?"complete":steps[i];
+          return e("div",{key:i},
+            e("div",{className:"wizard-step"},
+              e(StepIcon,{state:st,num:i+1}),
+              e("div",{className:"step-content"},
+                e("div",{className:"step-label",style:{color:st==="pending"?"#94A3B8":st==="error"?"#DC2626":"#1E293B"}},s.label),
+                e("div",{className:"step-sub"},st==="running"&&i===1?`Elapsed: ${elapsed}s - waiting for pod readiness...`:st==="error"?"Failed: unable to connect to K8s API. Check RBAC permissions.":s.sub),
+                st==="error"&&e("div",{style:{marginTop:10}},e(Btn,{variant:"primary",size:"sm",onClick:()=>setCurrent(2)},"Retry from step 3"))
+              )
+            ),
+            i<6&&e("div",{className:"step-connector",style:{background:st==="complete"?"#BBF7D0":"#E2E8F0"}})
+          );
+        })
+      )
+    ),
+    allDone&&e("div",{style:{marginTop:20}},
+      e("div",{className:"alert alert-succ",style:{marginBottom:14}},SVG_ICONS.check,e("span",null,"Metabase instance provisioned at analytics-acmecorp.internal.brijjworks. Connection saved.")),
+      e(Btn,{variant:"primary",onClick:()=>onNavigate("users-list")},"Go to Analytics Users  \u2192")
+    )
+  );
+};
+
+/* ── Screen: Connected ── */
+const ScreenConnected=({tab,onTab,status="connected",onNavigate})=>
+  e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}},
+      e("div",{style:{display:"flex",alignItems:"center",gap:12}},
+        e("span",{style:{fontSize:22,fontWeight:700,color:"#0F172A"}},"Metabase Analytics"),
+        e(Badge,{type:status},status==="connected"?"Connected":status==="degraded"?"Degraded":"Disconnected")
+      ),
+      e("div",{style:{display:"flex",gap:8}},
+        e(Btn,{variant:"outline",size:"sm"},SVG_ICONS.refresh," Health Check"),
+        status==="connected"&&e(Btn,{variant:"outline",size:"sm",onClick:()=>onNavigate("disconnect-dialog"),style:{color:"#DC2626",borderColor:"#FECACA"}},SVG_ICONS.plug," Disconnect")
+      )
+    ),
+    status==="degraded"&&e("div",{className:"alert alert-warn",style:{marginBottom:18}},SVG_ICONS.warn,e("span",null,"1 dashboard mapping is stale. ",e("a",{style:{color:"#92400E",fontWeight:700,cursor:"pointer",textDecoration:"underline"},onClick:()=>onTab("mappings")},"View mappings"))),
+    e("div",{className:"tab-bar"},["connection","users","mappings"].map(t=>e("button",{key:t,className:"tab"+(tab===t?" active":""),onClick:()=>onTab(t)},t==="connection"?"Connection":t==="users"?"Analytics Users":"Dashboard Mappings"))),
+    tab==="connection"&&e("div",{className:"fade-in"},
+      e("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:24}},
+        e("div",{className:"stat-card"},e("div",{className:"stat-val"},"3"),e("div",{className:"stat-label"},"Active analytics users")),
+        e("div",{className:"stat-card"},e("div",{className:"stat-val"},"4"),e("div",{className:"stat-label"},"Dashboard mappings")),
+        e("div",{className:"stat-card"},e("div",{className:"stat-val",style:{color:status==="degraded"?"#B45309":"#0F172A"}},status==="degraded"?"1":"0"),e("div",{className:"stat-label"},"Stale mappings"))
+      ),
+      e("div",{className:"card"},
+        e("div",{className:"card-header"},e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Instance details")),
+        e("div",{className:"card-body",style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:18,fontSize:13}},
+          ...[["Instance URL","analytics-acmecorp.internal.brijjworks"],["Namespace","bw-metabase-acmecorp"],["Pod status","Running (1/1 ready)"],["Metadata DB","metabase_acmecorp (PostgreSQL)"],["DB user","bw_acmecorp_ro"],["Connected since","12 Jan 2025, 10:32"]].map(([l,v])=>
+            e("div",{key:l},e("div",{style:{fontSize:11,fontWeight:700,color:"#94A3B8",marginBottom:4,letterSpacing:".04em",textTransform:"uppercase"}},l),e("div",{style:{color:"#1E293B",fontWeight:500}},v))
+          )
+        )
+      )
+    )
+  );
+
+/* ── Screen: Users ── */
+const ScreenUsers=({onNavigate})=>
+  e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}},
+      e("div",null,
+        e("div",{style:{fontSize:22,fontWeight:700,color:"#0F172A"}},"Analytics Users"),
+        e("div",{style:{fontSize:13,color:"#64748B",marginTop:4}},"Manage who has access to Metabase and can build dashboards")
+      ),
+      e(Btn,{variant:"primary",onClick:()=>onNavigate("add-user")},SVG_ICONS.plus," Add User")
+    ),
+    e("div",{className:"card"},
+      e("table",{className:"table"},
+        e("thead",null,e("tr",null,["User","Status","Metabase Role","Added",""].map(h=>e("th",{key:h},h)))),
+        e("tbody",null,
+          USERS.map(u=>e("tr",{key:u.id},
+            e("td",null,
+              e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                e("div",{style:{width:32,height:32,borderRadius:"50%",background:u.status==="deactivated"?"#E2E8F0":"linear-gradient(135deg,#3B82F6,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:u.status==="deactivated"?"#94A3B8":"#fff",flexShrink:0}},u.name.split(" ").map(n=>n[0]).join("")),
+                e("div",null,
+                  e("div",{style:{fontWeight:600,color:u.status==="deactivated"?"#94A3B8":"#1E293B"}},u.name),
+                  e("div",{style:{fontSize:12,color:"#94A3B8"}},u.email)
+                )
+              )
+            ),
+            e("td",null,e(Badge,{type:u.status},u.status.charAt(0).toUpperCase()+u.status.slice(1))),
+            e("td",null,e("span",{style:{fontSize:12,color:u.status==="deactivated"?"#CBD5E1":"#374151",fontWeight:500}},u.role)),
+            e("td",null,e("span",{style:{fontSize:12,color:"#94A3B8"}},u.added)),
+            e("td",{style:{textAlign:"right"}},u.status!=="deactivated"&&e("button",{className:"btn-icon btn-icon-danger"},SVG_ICONS.trash))
+          ))
+        )
+      )
+    )
+  );
+
+/* ── Screen: Add User ── */
+const ScreenAddUser=({onNavigate})=>{
+  const [selected,setSelected]=useState(null);
+  const [search,setSearch]=useState("");
+  const filtered=BW_USERS.filter(u=>u.name.toLowerCase().includes(search.toLowerCase())||u.email.toLowerCase().includes(search.toLowerCase()));
+  return e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:24}},
+      e("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#3B82F6",fontSize:13,padding:0,fontWeight:600,fontFamily:"inherit"},onClick:()=>onNavigate("users-list")},"\u2190 Analytics Users"),
+      e("span",{style:{color:"#CBD5E1"}},"/"),
+      e("span",{style:{fontSize:14,fontWeight:700,color:"#0F172A"}},"Add Analytics User")
+    ),
+    e("div",{className:"card",style:{maxWidth:560}},
+      e("div",{className:"card-header"},e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Select a user to add")),
+      e("div",{className:"card-body"},
+        e("div",{style:{marginBottom:18}},
+          e("label",null,"Search existing Brijjworks users"),
+          e("div",{style:{position:"relative"}},
+            e("input",{type:"text",placeholder:"Search by name or email...",value:search,onChange:ev=>setSearch(ev.target.value),style:{paddingLeft:36}}),
+            e("span",{style:{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:"#94A3B8"}},SVG_ICONS.search)
+          )
+        ),
+        e("div",{style:{display:"flex",flexDirection:"column",gap:8,marginBottom:18}},
+          filtered.map(u=>e("div",{key:u.id,onClick:()=>setSelected(u.id),style:{padding:"12px 16px",border:"2px solid "+(selected===u.id?"#3B82F6":"#E2E8F0"),borderRadius:10,cursor:"pointer",background:selected===u.id?"#EFF6FF":"#fff",display:"flex",alignItems:"center",justifyContent:"space-between",transition:"all .2s"}},
+            e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+              e("div",{style:{width:36,height:36,borderRadius:"50%",background:"linear-gradient(135deg,#8B5CF6,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"#fff"}},u.name.split(" ").map(n=>n[0]).join("")),
+              e("div",null,
+                e("div",{style:{fontWeight:600,color:"#1E293B",fontSize:13}},u.name),
+                e("div",{style:{fontSize:12,color:"#94A3B8"}},u.email," \u00B7 ",u.role)
+              )
+            ),
+            selected===u.id&&e("span",{style:{color:"#3B82F6"}},SVG_ICONS.check)
+          ))
+        ),
+        selected&&e("div",{className:"alert alert-info fade-in",style:{marginBottom:0}},
+          e("div",{style:{flexShrink:0,marginTop:1}},SVG_ICONS.check),
+          e("div",null,
+            e("div",{style:{fontWeight:600,marginBottom:2}},BW_USERS.find(u=>u.id===selected)?.name+" will receive an email"),
+            e("div",{style:{fontSize:12,opacity:.8}},"Metabase login URL, auto-generated password, and first-login instructions")
+          )
+        )
+      ),
+      e("div",{className:"modal-footer"},
+        e(Btn,{variant:"outline",onClick:()=>onNavigate("users-list")},"Cancel"),
+        e(Btn,{variant:"primary",disabled:!selected,onClick:()=>onNavigate("users-list")},"Add & Send Credentials")
+      )
+    )
+  );
+};
+
+/* ── Screen: Mappings List ── */
+const ScreenMappings=({onNavigate})=>
+  e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}},
+      e("div",null,
+        e("div",{style:{fontSize:22,fontWeight:700,color:"#0F172A"}},"Dashboard Mappings"),
+        e("div",{style:{fontSize:13,color:"#64748B",marginTop:4}},"Map Metabase dashboards to app navigation menus and assign access permissions")
+      ),
+      e(Btn,{variant:"primary",onClick:()=>onNavigate("create-mapping")},SVG_ICONS.plus," Create Mapping")
+    ),
+    e("div",{className:"alert alert-warn",style:{marginBottom:18}},SVG_ICONS.warn,e("span",null,"1 mapping is stale \u2014 the Metabase dashboard no longer exists. Please remap or delete it.")),
+    e("div",{className:"card"},
+      e("table",{className:"table"},
+        e("thead",null,e("tr",null,["","Display Name","Target App","Metabase Dashboard","Status","Access",""].map(h=>e("th",{key:h},h)))),
+        e("tbody",null,
+          MAPPINGS.map(m=>e("tr",{key:m.id,style:{background:m.status==="stale"?"#FFFBEB":""}},
+            e("td",{style:{padding:"0 6px",width:30}},e("span",{className:"drag-handle"},SVG_ICONS.grip)),
+            e("td",null,e("span",{style:{fontWeight:600,color:"#1E293B"}},m.name)),
+            e("td",null,e("span",{className:"badge b-indigo",style:{fontSize:11}},m.app)),
+            e("td",null,e("span",{style:{fontSize:13,color:"#374151"}},m.dash)),
+            e("td",null,e(Badge,{type:m.status},m.status.charAt(0).toUpperCase()+m.status.slice(1))),
+            e("td",null,
+              e("div",{style:{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}},
+                e("span",{className:"chip chip-role",style:{fontSize:11}},SVG_ICONS.role," ",m.permDetail),
+                m.extras&&m.extras.length>0&&e("span",{style:{fontSize:11,color:"#94A3B8"}},`+${m.extras.length} more`)
+              )
+            ),
+            e("td",{style:{textAlign:"right",whiteSpace:"nowrap"}},
+              e("div",{style:{display:"flex",gap:4,justifyContent:"flex-end"}},
+                e("button",{className:"btn-icon",onClick:()=>onNavigate("edit-mapping"),title:"Edit"},SVG_ICONS.edit),
+                e("button",{className:"btn-icon btn-icon-danger",title:"Delete"},SVG_ICONS.trash)
+              )
+            )
+          ))
+        )
+      )
+    )
+  );
+
+/* ── Screen: Create Mapping (with Role / New Permission) ── */
+const ScreenCreateMapping=({onNavigate})=>{
+  const [app,setApp]=useState("");
+  const [dash,setDash]=useState("");
+  const [name,setName]=useState("");
+  const [permMode,setPermMode]=useState("role");
+  const [selectedRoles,setSelectedRoles]=useState([]);
+  const [newPermName,setNewPermName]=useState("");
+  const [createdPerms,setCreatedPerms]=useState([]);
+  const filteredRoles=app?ROLES.filter(r=>r.app===app):ROLES;
+
+  useEffect(()=>{if(dash)setName(dash);},[dash]);
+
+  const toggleRole=(rn)=>{
+    setSelectedRoles(prev=>prev.includes(rn)?prev.filter(r=>r!==rn):[...prev,rn]);
+  };
+  const addNewPerm=()=>{
+    if(newPermName.trim()&&!createdPerms.includes(newPermName.trim())){
+      setCreatedPerms(prev=>[...prev,newPermName.trim()]);
+      setNewPermName("");
+    }
+  };
+  const removePerm=(p)=>setCreatedPerms(prev=>prev.filter(x=>x!==p));
+
+  return e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:24}},
+      e("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#3B82F6",fontSize:13,padding:0,fontWeight:600,fontFamily:"inherit"},onClick:()=>onNavigate("mappings-list")},"\u2190 Dashboard Mappings"),
+      e("span",{style:{color:"#CBD5E1"}},"/"),
+      e("span",{style:{fontSize:14,fontWeight:700,color:"#0F172A"}},"Create Mapping")
+    ),
+
+    /* Main Grid */
+    e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:20,maxWidth:960}},
+
+      /* Left Column: Dashboard Details */
+      e("div",null,
+        e("div",{className:"card"},
+          e("div",{className:"card-header"},e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Dashboard Details")),
+          e("div",{className:"card-body"},
+            e("div",{style:{marginBottom:16}},e("label",null,"Target App"),e("select",{value:app,onChange:ev=>setApp(ev.target.value)},e("option",{value:""},"Select an app..."),APPS.map(a=>e("option",{key:a,value:a},a)))),
+            e("div",{style:{marginBottom:16}},
+              e("label",null,"Metabase Dashboard"),
+              e("select",{value:dash,onChange:ev=>setDash(ev.target.value)},e("option",{value:""},"Select from Dashboards collection..."),MB_DASHBOARDS.map(d=>e("option",{key:d,value:d},d))),
+              e("div",{style:{fontSize:11,color:"#94A3B8",marginTop:5}},"Showing dashboards from bw_acmecorp_collection")
+            ),
+            e("div",{style:{marginBottom:16}},e("label",null,"Display Name"),e("input",{value:name,onChange:ev=>setName(ev.target.value),placeholder:"e.g. Sales Overview"})),
+            e("div",null,e("label",null,"Sort Order"),e("input",{type:"number",defaultValue:1,style:{width:80}}))
+          )
+        ),
+        dash&&e("div",{className:"alert alert-succ fade-in",style:{marginTop:14,fontSize:12}},SVG_ICONS.check,e("span",null,"Embedding will be automatically enabled on this dashboard via the Metabase API when you save."))
+      ),
+
+      /* Right Column: Access Permissions */
+      e("div",null,
+        e("div",{className:"card"},
+          e("div",{className:"card-header"},
+            e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Access Permissions"),
+            dash&&e("span",{style:{fontSize:11,background:"#F1F5F9",padding:"4px 10px",borderRadius:6,color:"#64748B",fontWeight:600,fontFamily:"monospace"}},`Analytics:Dashboard:${MAPPINGS.length+1}`)
+          ),
+          e("div",{className:"card-body",style:{paddingTop:14}},
+            /* Permission Mode Selector */
+            e("div",{style:{marginBottom:18}},
+              e("label",{style:{marginBottom:8}},"How would you like to grant access?"),
+              e("div",{className:"seg-ctrl"},
+                e("button",{className:"seg-btn"+(permMode==="role"?" active":""),onClick:()=>setPermMode("role")},"Assign Existing Role"),
+                e("button",{className:"seg-btn"+(permMode==="newperm"?" active":""),onClick:()=>setPermMode("newperm")},"Create New Permission")
+              )
+            ),
+
+            /* MODE: Assign Existing Role */
+            permMode==="role"&&e("div",{className:"fade-in"},
+              e("div",{className:"alert alert-info",style:{marginBottom:16,fontSize:12}},
+                SVG_ICONS.shield,
+                e("span",null,"Select an existing app role. All users assigned to that role will automatically get access to this dashboard.")
+              ),
+              e("label",null,"Select role(s)",app&&e("span",{style:{fontWeight:400,color:"#94A3B8"}}," \u2014 filtered by ",app)),
+              e("div",{style:{display:"flex",flexDirection:"column",gap:6,marginTop:4}},
+                filteredRoles.map(r=>e("div",{key:r.name,onClick:()=>toggleRole(r.name),style:{
+                  padding:"10px 14px",border:"2px solid "+(selectedRoles.includes(r.name)?"#8B5CF6":"#E2E8F0"),
+                  borderRadius:8,cursor:"pointer",background:selectedRoles.includes(r.name)?"#FAF5FF":"#fff",
+                  display:"flex",alignItems:"center",justifyContent:"space-between",transition:"all .2s"
+                }},
+                  e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                    e("div",{style:{width:30,height:30,borderRadius:8,background:selectedRoles.includes(r.name)?"linear-gradient(135deg,#8B5CF6,#7C3AED)":"#F1F5F9",display:"flex",alignItems:"center",justifyContent:"center",color:selectedRoles.includes(r.name)?"#fff":"#94A3B8",transition:"all .2s"}},SVG_ICONS.role),
+                    e("div",null,
+                      e("div",{style:{fontWeight:600,fontSize:13,color:"#1E293B"}},r.name),
+                      e("div",{style:{fontSize:11,color:"#94A3B8"}},r.app," \u00B7 ",r.members," members")
+                    )
+                  ),
+                  selectedRoles.includes(r.name)&&e("span",{style:{color:"#8B5CF6"}},SVG_ICONS.check)
+                ))
+              ),
+              selectedRoles.length>0&&e("div",{style:{marginTop:14}},
+                e("div",{style:{fontSize:11,fontWeight:700,color:"#94A3B8",letterSpacing:".06em",marginBottom:8,textTransform:"uppercase"}},"Selected Roles"),
+                e("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
+                  selectedRoles.map(r=>e("span",{key:r,className:"chip chip-role"},r,e("button",{className:"chip-remove",onClick:(ev)=>{ev.stopPropagation();toggleRole(r)}},"\u00D7")))
+                )
+              ),
+              selectedRoles.length===0&&!app&&e("div",{className:"empty-state",style:{padding:"16px 0 4px"}},
+                e("div",{className:"empty-state-sub"},"Select a target app above to see available roles")
+              )
+            ),
+
+            /* MODE: Create New Permission */
+            permMode==="newperm"&&e("div",{className:"fade-in"},
+              e("div",{className:"alert alert-info",style:{marginBottom:16,fontSize:12}},
+                SVG_ICONS.plus,
+                e("span",null,"Create a new permission for this dashboard. It will be registered in the Brijjworks permission store and can be assigned to roles later.")
+              ),
+              e("label",null,"Permission Name"),
+              e("div",{style:{display:"flex",gap:8,marginTop:4}},
+                e("input",{value:newPermName,onChange:ev=>setNewPermName(ev.target.value),placeholder:"e.g. ViewSalesDashboard",style:{flex:1},onKeyDown:ev=>{if(ev.key==="Enter")addNewPerm()}}),
+                e(Btn,{variant:"primary",size:"sm",onClick:addNewPerm,disabled:!newPermName.trim()},SVG_ICONS.plus," Add")
+              ),
+              e("div",{style:{fontSize:11,color:"#94A3B8",marginTop:6}},"Permission key will be registered as: ",
+                e("code",{style:{background:"#0F172A",color:"#F59E0B",padding:"2px 8px",borderRadius:4,fontSize:11,fontWeight:600}},
+                  newPermName.trim()?"Analytics:"+newPermName.trim():"Analytics:{PermissionName}"
+                )
+              ),
+
+              createdPerms.length>0&&e("div",{style:{marginTop:18}},
+                e("div",{style:{fontSize:11,fontWeight:700,color:"#94A3B8",letterSpacing:".06em",marginBottom:10,textTransform:"uppercase"}},"Created Permissions"),
+                e("div",{style:{display:"flex",flexDirection:"column",gap:6}},
+                  createdPerms.map(p=>e("div",{key:p,style:{padding:"10px 14px",border:"1px solid #BBF7D0",borderRadius:8,background:"#F0FDF4",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+                    e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                      e("div",{style:{width:28,height:28,borderRadius:8,background:"linear-gradient(135deg,#22C55E,#16A34A)",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff"}},SVG_ICONS.shield),
+                      e("div",null,
+                        e("div",{style:{fontSize:13,fontWeight:600,color:"#1E293B"}},p),
+                        e("code",{style:{fontSize:10,color:"#16A34A",fontWeight:500}},"Analytics:"+p)
+                      )
+                    ),
+                    e("button",{className:"btn-icon btn-icon-danger",style:{width:28,height:28},onClick:()=>removePerm(p)},SVG_ICONS.x)
+                  ))
+                )
+              ),
+
+              createdPerms.length===0&&e("div",{className:"empty-state",style:{padding:"20px 0 4px"}},
+                e("div",{className:"empty-state-sub"},"Enter a permission name and click Add to create it")
+              )
+            )
+          )
+        )
+      )
+    ),
+
+    /* Action buttons */
+    e("div",{style:{display:"flex",gap:10,marginTop:20}},
+      e(Btn,{variant:"outline",onClick:()=>onNavigate("mappings-list")},"Cancel"),
+      e(Btn,{variant:"primary",disabled:!app||!dash||!name||(selectedRoles.length===0&&createdPerms.length===0),onClick:()=>onNavigate("mappings-list")},"Save Mapping")
+    )
+  );
+};
+
+/* ── Screen: Edit Mapping (Roles + Custom Permissions) ── */
+const ScreenEditMapping=({onNavigate})=>{
+  const [addMode,setAddMode]=useState("role");
+  const [showAddModal,setShowAddModal]=useState(false);
+  const [modalPermName,setModalPermName]=useState("");
+
+  return e("div",{className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:24}},
+      e("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#3B82F6",fontSize:13,padding:0,fontWeight:600,fontFamily:"inherit"},onClick:()=>onNavigate("mappings-list")},"\u2190 Dashboard Mappings"),
+      e("span",{style:{color:"#CBD5E1"}},"/"),
+      e("span",{style:{fontSize:14,fontWeight:700,color:"#0F172A"}},"Edit Mapping \u2014 Sales Overview")
+    ),
+
+    e("div",{style:{display:"grid",gridTemplateColumns:"1fr 1.2fr",gap:20,maxWidth:960}},
+      /* Left: Dashboard details */
+      e("div",null,
+        e("div",{className:"card"},
+          e("div",{className:"card-header"},e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Dashboard Details")),
+          e("div",{className:"card-body"},
+            e("div",{style:{marginBottom:16}},e("label",null,"Target App"),e("select",null,e("option",null,"CRM"))),
+            e("div",{style:{marginBottom:16}},e("label",null,"Metabase Dashboard"),e("select",null,e("option",null,"Monthly Sales Report"))),
+            e("div",{style:{marginBottom:16}},e("label",null,"Display Name"),e("input",{defaultValue:"Sales Overview"})),
+            e("div",{style:{marginBottom:6}},e("label",null,"Sort Order"),e("input",{type:"number",defaultValue:1,style:{width:80}})),
+            e("div",{style:{marginTop:18,paddingTop:16,borderTop:"1px solid #F1F5F9"}},
+              e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+                e("span",{style:{fontSize:12,color:"#64748B",fontWeight:500}},"Permission key"),
+                e("code",{style:{fontSize:11,background:"#0F172A",padding:"5px 12px",borderRadius:6,color:"#F59E0B",fontWeight:600}},"Analytics:Dashboard:1")
+              )
+            )
+          )
+        )
+      ),
+
+      /* Right: Permissions panel */
+      e("div",null,
+        e("div",{className:"card"},
+          e("div",{className:"card-header",style:{justifyContent:"space-between"}},
+            e("span",{style:{fontWeight:700,color:"#0F172A",fontSize:14}},"Access Permissions"),
+            e(Btn,{variant:"ghost",size:"sm",onClick:()=>setShowAddModal(true)},SVG_ICONS.plus," Add")
+          ),
+          e("div",{className:"card-body",style:{padding:0}},
+
+            /* Assigned Roles Section */
+            e("div",{style:{padding:"14px 20px 10px"}},
+              e("div",{style:{fontSize:10,fontWeight:700,color:"#94A3B8",letterSpacing:".08em",marginBottom:10,textTransform:"uppercase",display:"flex",alignItems:"center",gap:6}},SVG_ICONS.role," Assigned Roles"),
+              e("div",{style:{padding:"10px 14px",border:"1px solid #E8DEF8",borderRadius:8,background:"#FAF5FF",display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}},
+                e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                  e("div",{style:{width:30,height:30,borderRadius:8,background:"linear-gradient(135deg,#8B5CF6,#7C3AED)",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff"}},SVG_ICONS.role),
+                  e("div",null,
+                    e("div",{style:{fontSize:13,fontWeight:600,color:"#1E293B"}},"CRM Manager"),
+                    e("div",{style:{fontSize:11,color:"#94A3B8"}},"App role \u00B7 4 members \u00B7 CRM")
+                  )
+                ),
+                e("button",{className:"btn-icon btn-icon-danger",style:{width:28,height:28}},SVG_ICONS.x)
+              ),
+              e("div",{style:{padding:"10px 14px",border:"1px solid #E8DEF8",borderRadius:8,background:"#FAF5FF",display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}},
+                e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                  e("div",{style:{width:30,height:30,borderRadius:8,background:"linear-gradient(135deg,#8B5CF6,#7C3AED)",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff"}},SVG_ICONS.role),
+                  e("div",null,
+                    e("div",{style:{fontSize:13,fontWeight:600,color:"#1E293B"}},"Sales Analyst"),
+                    e("div",{style:{fontSize:11,color:"#94A3B8"}},"App role \u00B7 6 members \u00B7 CRM")
+                  )
+                ),
+                e("button",{className:"btn-icon btn-icon-danger",style:{width:28,height:28}},SVG_ICONS.x)
+              )
+            ),
+
+            e("div",{style:{height:1,background:"#F1F5F9",margin:"0 20px"}}),
+
+            /* Custom Permissions Section */
+            e("div",{style:{padding:"14px 20px"}},
+              e("div",{style:{fontSize:10,fontWeight:700,color:"#94A3B8",letterSpacing:".08em",marginBottom:10,textTransform:"uppercase",display:"flex",alignItems:"center",gap:6}},SVG_ICONS.shield," Custom Permissions"),
+              e("div",{style:{padding:"10px 14px",border:"1px solid #BBF7D0",borderRadius:8,background:"#F0FDF4",display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}},
+                e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                  e("div",{style:{width:28,height:28,borderRadius:8,background:"linear-gradient(135deg,#22C55E,#16A34A)",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff"}},SVG_ICONS.shield),
+                  e("div",null,
+                    e("div",{style:{fontSize:13,fontWeight:600,color:"#1E293B"}},"ViewSalesReport"),
+                    e("code",{style:{fontSize:10,color:"#16A34A",fontWeight:500}},"Analytics:ViewSalesReport")
+                  )
+                ),
+                e("button",{className:"btn-icon btn-icon-danger",style:{width:28,height:28}},SVG_ICONS.x)
+              )
+            ),
+
+            /* Summary */
+            e("div",{style:{padding:"12px 20px",background:"#FAFBFC",borderTop:"1px solid #F1F5F9",borderRadius:"0 0 12px 12px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+              e("span",{style:{fontSize:12,color:"#64748B",fontWeight:500}},"2 roles (10 members) + 1 custom permission"),
+              e("span",{style:{fontSize:12,color:"#3B82F6",fontWeight:600}},"3 entries total")
+            )
+          )
+        )
+      )
+    ),
+
+    e("div",{style:{display:"flex",gap:10,marginTop:20}},
+      e(Btn,{variant:"outline",onClick:()=>onNavigate("mappings-list")},"Cancel"),
+      e(Btn,{variant:"primary",onClick:()=>onNavigate("mappings-list")},"Save Changes")
+    ),
+
+    /* Add Permission Modal */
+    showAddModal&&e("div",{className:"overlay",style:{position:"fixed"}},
+      e("div",{className:"modal fade-in",style:{width:520}},
+        e("div",{className:"modal-header"},
+          e("span",{style:{fontSize:16,fontWeight:700,color:"#0F172A"}},"Add Permission"),
+          e("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#94A3B8"},onClick:()=>setShowAddModal(false)},SVG_ICONS.x)
+        ),
+        e("div",{className:"modal-body"},
+          e("div",{style:{marginBottom:18}},
+            e("div",{className:"seg-ctrl",style:{width:"100%",display:"flex"}},
+              e("button",{className:"seg-btn"+(addMode==="role"?" active":""),onClick:()=>setAddMode("role"),style:{flex:1}},"Assign Existing Role"),
+              e("button",{className:"seg-btn"+(addMode==="newperm"?" active":""),onClick:()=>setAddMode("newperm"),style:{flex:1}},"Create New Permission")
+            )
+          ),
+
+          /* Modal: Assign Existing Role */
+          addMode==="role"&&e("div",{className:"fade-in"},
+            e("label",null,"Select a role to grant access"),
+            e("div",{style:{display:"flex",flexDirection:"column",gap:6,marginTop:6}},
+              ROLES.filter(r=>r.app==="CRM").map(r=>e("div",{key:r.name,style:{padding:"10px 14px",border:"2px solid #E2E8F0",borderRadius:8,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",transition:"all .2s"},onMouseEnter:ev=>ev.currentTarget.style.borderColor="#8B5CF6",onMouseLeave:ev=>ev.currentTarget.style.borderColor="#E2E8F0"},
+                e("div",{style:{display:"flex",alignItems:"center",gap:10}},
+                  e("div",{style:{width:30,height:30,borderRadius:8,background:"#F1F5F9",display:"flex",alignItems:"center",justifyContent:"center",color:"#94A3B8"}},SVG_ICONS.role),
+                  e("div",null,
+                    e("div",{style:{fontWeight:600,fontSize:13,color:"#1E293B"}},r.name),
+                    e("div",{style:{fontSize:11,color:"#94A3B8"}},r.app," \u00B7 ",r.members," members")
+                  )
+                )
+              ))
+            )
+          ),
+
+          /* Modal: Create New Permission */
+          addMode==="newperm"&&e("div",{className:"fade-in"},
+            e("label",null,"Permission Name"),
+            e("input",{value:modalPermName,onChange:ev=>setModalPermName(ev.target.value),placeholder:"e.g. ViewSalesDashboard",style:{marginTop:4,marginBottom:10}}),
+            e("div",{style:{fontSize:11,color:"#94A3B8",marginBottom:16}},"This will be registered as: ",
+              e("code",{style:{background:"#0F172A",color:"#F59E0B",padding:"2px 8px",borderRadius:4,fontSize:11,fontWeight:600}},
+                modalPermName.trim()?"Analytics:"+modalPermName.trim():"Analytics:{PermissionName}"
+              )
+            ),
+            modalPermName.trim()&&e("div",{className:"alert alert-succ fade-in",style:{fontSize:12}},
+              SVG_ICONS.check,
+              e("span",null,"Permission \"Analytics:",modalPermName.trim(),"\" will be created and assigned to this dashboard mapping.")
+            )
+          )
+        ),
+        e("div",{className:"modal-footer"},
+          e(Btn,{variant:"outline",onClick:()=>{setShowAddModal(false);setModalPermName("")}},"Cancel"),
+          e(Btn,{variant:"primary",disabled:addMode==="newperm"&&!modalPermName.trim(),onClick:()=>{setShowAddModal(false);setModalPermName("")}},addMode==="role"?"Assign Role":"Create Permission")
+        )
+      )
+    )
+  );
+};
+
+/* ── Screen: Disconnect Dialog ── */
+const ScreenDisconnectDialog=({onNavigate})=>
+  e("div",{style:{position:"relative",height:"100%"}},
+    e(ScreenConnected,{tab:"connection",onTab:()=>{},status:"connected",onNavigate:()=>{}}),
+    e("div",{className:"overlay"},
+      e("div",{className:"modal fade-in",style:{width:460}},
+        e("div",{className:"modal-header"},
+          e("span",{style:{fontSize:16,fontWeight:700,color:"#0F172A"}},"Disconnect from Metabase"),
+          e("button",{style:{background:"none",border:"none",cursor:"pointer",color:"#94A3B8"},onClick:()=>onNavigate("connected")},SVG_ICONS.x)
+        ),
+        e("div",{className:"modal-body"},
+          e("div",{className:"alert alert-warn",style:{marginBottom:16}},SVG_ICONS.warn,e("span",{style:{fontWeight:600}},"This will temporarily suspend analytics for all users.")),
+          e("div",{style:{fontSize:13,color:"#374151",marginBottom:14,fontWeight:600}},"The following will happen:"),
+          ...[
+            ["Metabase pod scaled to 0 (all resources preserved)","amber"],
+            ["All Metabase users deactivated","amber"],
+            ["Dashboard menus hidden for all users","amber"],
+            ["Notification email sent to 3 active users","gray"]
+          ].map(([t,c])=>
+            e("div",{key:t,style:{display:"flex",gap:10,alignItems:"center",marginBottom:8}},
+              e("span",{className:"dot dot-"+c}),e("span",{style:{fontSize:13,color:"#374151"}},t)
+            )
+          ),
+          e("div",{style:{marginTop:14,fontSize:13,color:"#64748B",background:"#F8FAFC",padding:"10px 14px",borderRadius:8,border:"1px solid #E2E8F0"}},"All Metabase resources are preserved. Reconnect at any time.")
+        ),
+        e("div",{className:"modal-footer"},
+          e(Btn,{variant:"outline",onClick:()=>onNavigate("connected")},"Cancel"),
+          e(Btn,{variant:"danger",onClick:()=>onNavigate("not-connected")},SVG_ICONS.plug," Disconnect")
+        )
+      )
+    )
+  );
+
+/* ── Screen: App Menu ── */
+const ScreenAppMenu=({onNavigate})=>
+  e("div",{style:{height:"100%",display:"flex",flexDirection:"column"},className:"slide-up"},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}},
+      e("div",null,
+        e("div",{style:{fontSize:22,fontWeight:700,color:"#0F172A"}},"CRM"),
+        e("div",{style:{fontSize:13,color:"#64748B",marginTop:2}},"Acme Corp \u00B7 CRM workspace")
+      )
+    ),
+    e("div",{style:{display:"flex",gap:20,flex:1}},
+      e("div",{style:{width:190,background:"#fff",border:"1px solid #E2E8F0",borderRadius:12,padding:"14px 10px",flexShrink:0,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}},
+        e("div",{style:{fontSize:10,fontWeight:700,color:"#94A3B8",letterSpacing:".08em",padding:"0 8px 8px",textTransform:"uppercase"}},"Menu"),
+        ...[["Contacts","users"],["Deals","money"],["Activities","help"]].map(([l,i])=>
+          e("div",{key:l,style:{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",borderRadius:8,cursor:"pointer",fontSize:13,color:"#64748B",fontWeight:500,transition:"all .2s"}},SVG_ICONS[i],l)
+        ),
+        e("div",{style:{height:1,background:"#F1F5F9",margin:"10px 0"}}),
+        e("div",{style:{fontSize:10,fontWeight:700,color:"#3B82F6",letterSpacing:".08em",padding:"4px 8px 8px",textTransform:"uppercase"}},"Analytics"),
+        e("div",{className:"analytics-item ai-active",onClick:()=>onNavigate("embedded")},SVG_ICONS.chart,"Sales Overview"),
+        e("div",{className:"analytics-item",onClick:()=>onNavigate("embedded")},SVG_ICONS.chart,"Lead Funnel")
+      ),
+      e("div",{style:{flex:1}},
+        e("div",{className:"card"},
+          e("div",{className:"card-body"},
+            e("div",{style:{fontWeight:700,color:"#0F172A",marginBottom:8,fontSize:15}},"Sales Overview"),
+            e("div",{style:{color:"#64748B",fontSize:13,marginBottom:14,lineHeight:1.5}},"Click a dashboard in the analytics sidebar to view it embedded. Menu items appear when you hold Analytics:View and at least one Analytics:Dashboard permission for this app."),
+            e("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
+              e("div",{className:"badge b-green"},"Analytics:View"),
+              e("div",{className:"badge b-blue"},"Analytics:Dashboard:1"),
+              e("div",{className:"badge b-blue"},"Analytics:Dashboard:2")
+            )
+          )
+        )
+      )
+    )
+  );
+
+/* ── Screen: Embedded ── */
+const ScreenEmbedded=({onNavigate})=>
+  e("div",{style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",overflow:"hidden"}},
+    e("div",{className:"mb-chrome"},
+      e("span",{className:"mb-logo"},"metabase"),
+      e("span",{className:"mb-nav-item mb-active"},"Sales Overview"),
+      e("span",{className:"mb-nav-item"},"Browse data"),
+      e("span",{style:{marginLeft:"auto",fontSize:12,color:"rgba(255,255,255,.6)"}},"+")
+    ),
+    e("div",{style:{background:"#F3F4F6",flex:1,padding:22,overflow:"auto"}},
+      e("div",{style:{fontSize:15,fontWeight:700,color:"#0F172A",marginBottom:16}},"Sales Overview \u2014 Q1 2025"),
+      e("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:18}},
+        ...[["Total Revenue","\u20B924.6L","+12%"],["Deals Closed","43","+8%"],["Win Rate","68%","+3%"],["Avg Deal Size","\u20B957K","+5%"]].map(([l,v,c])=>
+          e("div",{key:l,className:"metric-card"},e("div",{className:"metric-lbl",style:{marginBottom:4}},l),e("div",{className:"metric-val"},v),e("div",{className:"metric-chg"},c+" vs last quarter"))
+        )
+      ),
+      e("div",{style:{display:"grid",gridTemplateColumns:"1.5fr 1fr",gap:14}},
+        e("div",{style:{background:"#fff",border:"1px solid #E2E8F0",borderRadius:12,padding:18,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}},
+          e("div",{style:{fontSize:14,fontWeight:700,color:"#0F172A",marginBottom:14}},"Monthly Revenue"),
+          e("div",{className:"bar-chart"},...[40,55,38,70,60,80,65,90,75,88,72,95].map((h,i)=>e("div",{key:i,className:"bar"+(i%3===0?" bar-alt":""),style:{height:h*0.8+"px",flex:1}}))),
+          e("div",{style:{display:"flex",justifyContent:"space-between",fontSize:10,color:"#94A3B8",marginTop:6}},"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ").map(m=>e("span",{key:m},m)))
+        ),
+        e("div",{style:{background:"#fff",border:"1px solid #E2E8F0",borderRadius:12,padding:18,boxShadow:"0 1px 3px rgba(0,0,0,.04)"}},
+          e("div",{style:{fontSize:14,fontWeight:700,color:"#0F172A",marginBottom:14}},"Pipeline by Stage"),
+          ...[["Prospecting","68%","#3B82F6"],["Proposal","42%","#60A5FA"],["Negotiation","28%","#93C5FD"],["Closed","15%","#BFDBFE"]].map(([l,p,c])=>
+            e("div",{key:l,style:{marginBottom:10}},
+              e("div",{style:{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}},e("span",{style:{color:"#374151",fontWeight:500}},l),e("span",{style:{color:"#64748B",fontWeight:600}},p)),
+              e("div",{style:{height:7,background:"#F1F5F9",borderRadius:4}},e("div",{style:{height:"100%",width:p,background:c,borderRadius:4}}))
+            )
+          )
+        )
+      )
+    ),
+    e("div",{style:{background:"#fff",borderTop:"1px solid #E2E8F0",padding:"8px 18px",fontSize:11,color:"#94A3B8",display:"flex",justifyContent:"space-between",fontWeight:500}},
+      e("span",null,"Metabase OSS \u00B7 Embedded via signed JWT"),
+      e("span",null,"Data scoped to Acme Corp via bw_acmecorp_ro \u00B7 Token expires in 14m 32s")
+    )
+  );
+
+/* ── Error Screen ── */
+const ErrorScreen=({type})=>{
+  const cfg={
+    "err-noaccess":{icon:SVG_ICONS.shield,title:"Access denied",sub:"You don't have permission to view this dashboard.",hint:"Contact your admin to request Analytics:Dashboard access.",btn:"Go back",color:"#FEF2F2",textColor:"#DC2626",borderColor:"#FECACA"},
+    "err-unavailable":{icon:SVG_ICONS.warn,title:"Dashboard temporarily unavailable",sub:"Could not connect to the Metabase instance. The pod may be starting up.",hint:"This usually resolves in 30-60 seconds.",btn:"Retry",color:"#FFFBEB",textColor:"#B45309",borderColor:"#FDE68A"},
+    "err-disconnected":{icon:SVG_ICONS.plug,title:"Analytics integration is disconnected",sub:"Your company's analytics integration has been suspended.",hint:"Contact your administrator to reconnect.",btn:"Learn more",color:"#F8FAFC",textColor:"#64748B",borderColor:"#E2E8F0"}
+  }[type]||{};
+  return e("div",{className:"error-screen"},
+    e("div",{style:{width:72,height:72,background:cfg.color,border:"2px solid "+(cfg.borderColor||"#E2E8F0"),borderRadius:20,display:"flex",alignItems:"center",justifyContent:"center",color:cfg.textColor,marginBottom:6}},e("div",{style:{transform:"scale(2)"}},cfg.icon)),
+    e("div",{style:{fontSize:18,fontWeight:700,color:cfg.textColor}},cfg.title),
+    e("div",{style:{fontSize:13,color:"#64748B",maxWidth:340,lineHeight:1.5}},cfg.sub),
+    e("div",{style:{fontSize:12,color:"#94A3B8",marginTop:4}},cfg.hint),
+    e(Btn,{variant:"outline",size:"sm"},cfg.btn)
+  );
+};
+
+/* ── App ── */
+function App(){
+  const [screen,setScreen]=useState("not-connected");
+  const [tab,setTab]=useState("connection");
+  const handleNav=(s)=>{
+    setScreen(s);
+    if(s==="connected"||s==="degraded") setTab("connection");
+    if(s==="users-list") setTab("users");
+    if(s==="mappings-list") setTab("mappings");
+  };
+  const settingsScreens=["not-connected","wizard-running","wizard-error","wizard-complete","connected","degraded","disconnect-dialog","users-list","add-user","mappings-list","create-mapping","edit-mapping"];
+  const isApp=["app-menu","embedded","err-noaccess","err-unavailable","err-disconnected"].includes(screen);
+  const isEmbed=screen==="embedded";
+  const showBreadcrumb=settingsScreens.includes(screen)&&!["wizard-running","wizard-error","wizard-complete","disconnect-dialog","add-user","create-mapping","edit-mapping"].includes(screen);
+
+  const renderContent=()=>{
+    switch(screen){
+      case "not-connected": return e(ScreenNotConnected,{onNavigate:handleNav});
+      case "wizard-running": return e(ScreenWizard,{key:"wiz-r",mode:"running",onNavigate:handleNav});
+      case "wizard-error":   return e(ScreenWizard,{key:"wiz-e",mode:"error",onNavigate:handleNav});
+      case "wizard-complete":return e(ScreenWizard,{key:"wiz-c",mode:"complete",onNavigate:handleNav});
+      case "connected":      return e(ScreenConnected,{tab:"connection",onTab:setTab,status:"connected",onNavigate:handleNav});
+      case "degraded":       return e(ScreenConnected,{tab:"connection",onTab:setTab,status:"degraded",onNavigate:handleNav});
+      case "disconnect-dialog": return e(ScreenDisconnectDialog,{onNavigate:handleNav});
+      case "users-list":     return e(ScreenUsers,{onNavigate:handleNav});
+      case "add-user":       return e(ScreenAddUser,{onNavigate:handleNav});
+      case "mappings-list":  return e(ScreenMappings,{onNavigate:handleNav});
+      case "create-mapping": return e(ScreenCreateMapping,{onNavigate:handleNav});
+      case "edit-mapping":   return e(ScreenEditMapping,{onNavigate:handleNav});
+      case "app-menu":       return e(ScreenAppMenu,{onNavigate:handleNav});
+      case "embedded":       return e(ScreenEmbedded,{onNavigate:handleNav});
+      default:               return e(ErrorScreen,{type:screen});
+    }
+  };
+
+  return e("div",{className:"proto-root"},
+    e(ProtoNav,{screen,onSelect:handleNav}),
+    e("div",{className:"bw-shell"},
+      e(TopBar),
+      e("div",{className:"bw-body"},
+        isApp?e(Sidebar,{type:"wide"}):e(Sidebar,{type:"icon"}),
+        e("div",{className:"bw-content",style:{padding:isEmbed?0:28,overflow:isEmbed?"hidden":"auto"}},
+          showBreadcrumb&&e("div",{style:{display:"flex",gap:8,fontSize:11,color:"#94A3B8",marginBottom:18,alignItems:"center",fontWeight:500}},"Settings"," / ","Integrations"," / ",e("span",{style:{color:"#3B82F6",fontWeight:600}},"Metabase Analytics")),
+          renderContent()
+        )
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+</script>
+</body>
+</html>

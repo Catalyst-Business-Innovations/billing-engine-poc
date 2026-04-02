@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p src/app/prototypes/billing-engine)",
+      "Bash(mkdir -p src/app/home)"
+    ]
+  }
+}

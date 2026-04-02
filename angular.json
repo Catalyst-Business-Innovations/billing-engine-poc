@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "subscription-plan-builder": {
+    "ui-prototypes": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/subscription-plan-builder",
+            "outputPath": "dist/ui-prototypes",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -49,8 +49,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": { "browserTarget": "subscription-plan-builder:build:production" },
-            "development": { "browserTarget": "subscription-plan-builder:build:development" }
+            "production": { "browserTarget": "ui-prototypes:build:production" },
+            "development": { "browserTarget": "ui-prototypes:build:development" }
           },
           "defaultConfiguration": "development"
         }
